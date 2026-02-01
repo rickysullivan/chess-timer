@@ -5,6 +5,13 @@ stepsCompleted:
   - step-03-success
   - step-04-journeys
   - step-05-domain
+  - step-06-innovation
+  - step-07-project-type
+  - step-08-scoping
+  - step-09-functional
+  - step-10-nonfunctional
+  - step-11-polish
+  - step-12-complete
 inputDocuments:
   - _bmad-output/planning-artifacts/product-brief-chess-timer-2026-01-29.md
 documentCounts:
@@ -58,7 +65,7 @@ chess-timer is an installable, mobile-first web chess timer with zero App Store 
 - Large tap zones for side switching.
 - Pause, reset, undo.
 - Sound and vibration toggles.
-- Tournament-ready mode (prevent sleep/lock).
+- Keep-screen-awake setting.
 - Orientation support (portrait/landscape).
 - Basic accessibility (large digits, high contrast).
 
@@ -124,12 +131,12 @@ Resolution: The user regains confidence in the timer and continues play.
 
 | Success Criteria | Journeys | Functional Requirements |
 | --- | --- | --- |
-| Start a timed game within 60 seconds; setup ease >=4/5. | Casual Duo Success Path; Club Organizer Multi-Board Setup | Start game within 1s; presets list; custom control saved within 1s; last-used control preselected; repeat visit under 2s |
-| Distraction <=5% rate >=3/5 during 10-minute sessions. | Casual Duo Success Path; Tech-Savvy Hobbyist | Large tap zones + switch within 50ms; high-contrast mode; large digits; sound/vibration toggles |
-| Pause/reset/undo tasks >=95% success within 10 seconds. | Casual Duo Edge Case; Support/Troubleshooting | Pause/resume; reset to initial control; undo last switch |
-| Share/referral actions >=10% of sessions; >=5% new sessions from shared links. | Club Organizer Multi-Board Setup; Tech-Savvy Hobbyist | Shareable URL access; installable via browser prompt; last-used control preselected |
-| Timing accuracy and offline reliability targets met. | Tournament Traveler Offline Reliability; Casual Duo Success Path | Offline after first load; switch within 50ms; performance/reliability NFRs |
-| Orientation support for active play. | Casual Duo Success Path; Club Organizer Multi-Board Setup | Orientation support (portrait/landscape) |
+| Start a timed game within 60 seconds; setup ease >=4/5. | Casual Duo Success Path; Club Organizer Multi-Board Setup | FR1, FR2, FR3, FR6, FR25 |
+| Distraction <=5% rate >=3/5 during 10-minute sessions. | Casual Duo Success Path; Tech-Savvy Hobbyist | FR7, FR8, FR21, FR22, FR16, FR17 |
+| Pause/reset/undo tasks >=95% success within 10 seconds. | Casual Duo Edge Case; Support/Troubleshooting | FR12, FR13, FR14 |
+| Share/referral actions >=10% of sessions; >=5% new sessions from shared links. | Club Organizer Multi-Board Setup; Tech-Savvy Hobbyist | FR30, FR31 |
+| Timing accuracy and offline reliability targets met. | Tournament Traveler Offline Reliability; Casual Duo Success Path | FR4, FR25, NFR-Performance, NFR-Reliability |
+| Orientation support for active play. | Casual Duo Success Path; Club Organizer Multi-Board Setup | FR29 |
 
 ## Problem Statement
 
@@ -174,54 +181,78 @@ Players need a chess timer that launches instantly, works offline, and stays out
 
 ## Functional Requirements
 
-### Timer Core
-- User can start a game from a preset or custom control; timer starts within 1 second of tapping Start.
-- User can set base time (minutes) plus increment and delay (seconds) for both sides; values are shown on the start screen and applied on first move.
-- User can switch turns with one tap on either side; each tap zone is at least 40% of viewport height and a successful tap switches within 50ms.
-- User can pause and resume; while paused, timers do not change and resuming restores the exact prior values.
-- User can reset to the initial time control; both timers return to starting values and the active side resets.
-- User can undo the most recent switch during an active game; active side and time values revert to the previous state.
+### Game Setup & Time Controls
+- FR1: Users can choose a preset time control.
+- FR2: Users can create a custom time control with base time, increment, and delay.
+- FR3: Users can start a game using the selected time control.
+- FR4: The system can count down the active player's time according to the selected control rules.
+- FR5: The system can display both player timers with the active side clearly indicated.
+- FR6: Users can relaunch the app with the last-used control preselected.
 
-### Presets and Custom Controls
-- User can choose from at least 6 presets: 1+0, 3+2, 5+0, 10+0, 15+10, 30+0.
-- User can create a custom control by entering base, increment, and delay; saved controls appear in the preset list within 1 second and are usable within one tap.
-- User can relaunch the app with the last used control preselected.
+### Turn Switching & Adaptive Interaction
+- FR7: Users can switch turns with a single tap on the active side.
+- FR8: The system can present either an adaptive hit-surface layout or a classic 50/50 layout during active play.
+- FR9: The system can flip the active and inactive zones when turns change.
+- FR10: Users can pause the game by tapping the inactive strip when adaptive layout is active.
+- FR11: The system can show a balanced 50/50 layout while paused and return to the prior layout on resume.
 
-### Settings
-- User can toggle sound on/off; when off, no audio plays for turn switches or alerts.
-- User can toggle vibration on/off; when off, no haptic feedback occurs for turn switches or alerts.
-- User can enable tournament mode; when enabled, the screen remains awake during active play for at least 20 minutes on supported browsers, otherwise a warning banner remains visible on the timer screen until tournament mode is disabled or the game ends.
-- User can enable high-contrast mode; timer text contrast meets or exceeds 4.5:1.
-- User can enable large digits; timer digits are at least 48px at a 375px-wide viewport.
+### Game Control & Recovery
+- FR12: Users can pause and resume an active game without losing state.
+- FR13: Users can reset the game to the initial time control.
+- FR14: Users can undo the most recent turn switch.
+- FR15: The system can end a game when a player's time reaches zero.
 
-### Install and Offline
-- User can install the app via browser prompt or menu; installed app appears on the home screen/app list.
-- User can use the app offline after first successful load; start, switch, pause, reset, undo, presets, and custom controls function without network.
-- User can open the app on repeat visits in under 2 seconds.
+### Settings & Preferences
+- FR16: Users can toggle sound feedback.
+- FR17: Users can toggle vibration feedback.
+- FR18: Users can toggle a keep-screen-awake setting during active play.
+- FR19: Users can choose adaptive or classic layout mode.
+- FR20: Users can adjust settings without losing an active game state.
 
-### Sharing and Orientation
-- User can access the app via a shareable URL without install or account requirements; opening the URL lands on the preset/start screen within 2 seconds.
-- User can rotate between portrait and landscape; timers, tap zones, and pause/reset/undo controls remain visible without scrolling, and each tap zone remains >=40% of viewport height; switching orientation preserves game state.
+### Accessibility & Visual Clarity
+- FR21: Users can enable high-contrast mode.
+- FR22: Users can enable large digits for timers.
+- FR23: The system can indicate state changes with non-color cues.
+
+### Install, Offline & Access
+- FR24: Users can install the app from the browser.
+- FR25: Users can use the app offline after the first successful load.
+- FR26: The system can persist settings and the last-used control locally.
+- FR27: The system can preserve in-progress game state across refresh or backgrounding.
+- FR28: Users can access the app without creating an account or logging in.
+
+### Device & Layout Support
+- FR29: The system can maintain a usable layout in both portrait and landscape orientations.
+
+### Sharing & Entry
+- FR30: Users can open the app via a shareable URL and start a game without install requirements.
+- FR31: The system can provide a shareable link for multi-board setups.
+
+### Analytics & Instrumentation
+- FR32: The system can record analytics events for key actions (open, game start, turn switch, pause/resume, reset, undo, install).
 
 ## Non-Functional Requirements
 
 ### Performance
-- Timer drift <= 100ms over 10 minutes; measure against a reference clock during a 10-minute run. Context: preserves fairness in timed play.
-- Input response median <= 50ms and 95th percentile <= 100ms; measure tap-to-UI update across 200 taps on mid-tier mobile. Context: keeps blitz and rapid play responsive.
-- Turn switch reflected within 50ms; measure tap-to-timer swap across 200 taps. Context: prevents confusion during fast exchanges.
+- Tap-to-switch latency: median <= 50ms, p95 <= 100ms on mid-tier mobile; measure 200 taps in a controlled test. Context: supports blitz/rapid play without hesitation.
+- Start-to-running after tapping Start: <= 1s; measure time from Start tap to active timer countdown. Context: keeps setup under 60 seconds.
 
 ### Reliability
-- Missed tap rate <= 1% in a 200-tap test; measure missed taps during controlled play. Context: avoids disputed moves and pauses.
-- Game state persists across refresh or backgrounding for at least 30 minutes; verify timers and active side are unchanged after return. Context: prevents game loss during interruptions.
+- Timer drift: <= 100ms over 10 minutes; measure against a reference clock during a 10-minute run. Context: fairness in timed play.
+- Missed tap rate: <= 1% over 200 taps; measure missed taps during controlled play. Context: prevents disputed moves.
+- Offline flows: 100% pass in smoke tests after first load across supported browsers. Context: ensures reliability when network drops.
+- State preservation: game resumes correctly after 30 minutes of backgrounding/refresh; verify timers and active side unchanged. Context: prevents game loss.
+- Keep-awake effectiveness: when enabled, the screen does not dim/lock for at least 20 minutes on supported browsers; verify with a controlled 20-minute session. Context: uninterrupted play.
 
 ### Accessibility
-- Default timer digits >= 48px at a 375px-wide viewport; verify computed font size. Context: readable at arm's length on phones.
-- High-contrast mode meets WCAG 2.1 AA (>= 4.5:1) for timer text; verify with contrast check. Context: supports low-vision players and bright environments.
-- All state changes include a non-color indicator (label or icon); verify via accessibility checklist. Context: supports color-blind users.
+- WCAG 2.1 AA compliance for contrast and interaction; verify with automated audit + manual review. Context: baseline accessibility for public users.
+- Contrast >= 4.5:1 for timer text and active states; verify with contrast checker. Context: readability in bright environments.
+- Touch targets >= 44px and visible focus on all controls; verify at 360px viewport. Context: prevents mis-taps and supports keyboard users.
+- Reduced-motion preference disables non-essential animations; verify with OS setting. Context: motion sensitivity.
 
-### Security and Privacy
-- No accounts or personal data collection in MVP; verify no PII fields and no PII in analytics events. Context: reduces privacy risk and compliance burden.
-- User settings and last-used control remain on-device only; verify no network persistence during settings changes. Context: ensures no user data is transmitted.
+### Security & Privacy
+- No accounts or PII collection; verify no PII fields and no PII in analytics events. Context: privacy-first MVP.
+- Settings and game state stored locally only; verify no network persistence during settings changes. Context: minimize data exposure.
 
 ## Architecture and Data Flow (Lightweight)
 
@@ -237,7 +268,7 @@ Players need a chess timer that launches instantly, works offline, and stays out
 - Ensure all gameplay flows (start, switch, pause, reset, undo, settings) work without network.
 
 ### Local Persistence
-- Store settings (sound, vibration, contrast, tournament mode) and last-used control locally.
+- Store settings (sound, vibration, contrast, keep-screen-awake) and last-used control locally.
 - Persist active game state (timers, active side, turn index, pause state) on visibility change and before unload.
 - On launch, restore last game state if it is less than 30 minutes old; otherwise start fresh with last-used control.
 
@@ -252,7 +283,7 @@ Players need a chess timer that launches instantly, works offline, and stays out
 ### Information Architecture
 - Landing: Preset list + Start action + Custom control entry.
 - In-game: Two large tap zones, timers, and compact controls (pause, reset, undo).
-- Settings: Sound, vibration, tournament mode, contrast.
+- Settings: Sound, vibration, keep-screen-awake, contrast.
 
 ### Interaction Details
 - Single tap switches turns with immediate visual and haptic feedback.
@@ -318,9 +349,8 @@ Players need a chess timer that launches instantly, works offline, and stays out
 
 ## SEO Strategy
 
-- Indexable landing page with clear title, meta description, and canonical URL.
-- Open Graph/Twitter metadata for share previews.
-- Sitemap and robots.txt to allow indexing of the landing page only.
+- App is not indexed; add `noindex` and restrict indexing via robots.txt.
+- Marketing site will be built later and handled separately.
 
 ## Accessibility Level
 
@@ -399,7 +429,7 @@ Players need a chess timer that launches instantly, works offline, and stays out
 - **Timer drift on mobile browsers:** use high-resolution timers and background-safe scheduling; test across iOS/Android.
 - **Missed taps during fast play:** large tap zones and immediate feedback; use touch event handling with minimal debounce.
 - **PWA install friction:** provide clear in-app hints for install; avoid full-screen prompts that interrupt first play.
-- **Device sleep during play:** tournament mode sets wake lock; provide fallback messaging if unsupported.
+- **Device sleep during play:** keep-screen-awake setting uses wake lock; provide fallback messaging if unsupported.
 
 ## Assumptions
 
@@ -430,3 +460,84 @@ Players need a chess timer that launches instantly, works offline, and stays out
 - Real-play tests for drift and missed taps.
 - First-time user time-to-start measurement.
 - Install and offline reliability checks.
+
+## Innovation & Novel Patterns
+
+### Detected Innovation Areas
+- **Adaptive hit-surface turn switching:** active player gets ~80% of the screen as the tap target; the inactive player shows in a compact 20% strip with time.
+- **Contextual pause interaction:** tapping the 20% strip pauses and expands the layout to 50/50 for each player to clearly show both timers.
+
+### Market Context & Competitive Landscape
+- Most web chess timers use symmetric 50/50 split with tap-to-switch and separate pause/reset controls.
+- The adaptive 80/20 hit-surface is a distinct interaction pattern that prioritizes active-player tap accuracy and reduces accidental switches.
+
+### Validation Approach
+- **Usability:** >=95% successful turn switches within 1 tap; missed-tap rate <=1% over 200 taps.
+- **Efficiency:** time-to-first-game <=60s with the adaptive layout enabled.
+- **Preference:** >=70% of users prefer adaptive layout vs 50/50 in a controlled A/B test (n>=30).
+
+### Risk Mitigation
+- **Risk:** users may be confused by asymmetric layout.
+  **Mitigation:** provide a quick onboarding tip and allow a settings toggle for classic 50/50 layout.
+- **Risk:** pause gesture on the 20% strip could be triggered accidentally.
+  **Mitigation:** require a deliberate tap with subtle confirmation (haptic + label) and allow disabling pause-tap in settings.
+- **Risk:** small inactive timer may reduce readability.
+  **Mitigation:** ensure minimum font size and provide a temporary full-screen 50/50 pause view.
+
+## Web App Specific Requirements
+
+### Project-Type Overview
+- Single-page application delivered as a PWA for modern mobile browsers.
+- App-only scope (no marketing site in this build).
+- No real-time sync requirements; single device per playing pair.
+
+### Technical Architecture Considerations
+- SPA routing with offline-first shell caching for instant launch.
+- Service Worker for installability and offline play.
+- No server-side sync; state is local only.
+- Accessibility target: WCAG 2.1 AA.
+
+## Project Scoping & Phased Development
+
+### MVP Strategy & Philosophy
+
+**MVP Approach:** experience-first
+**Resource Requirements:** 1 FE + 1 design
+
+### MVP Feature Set (Phase 1)
+
+**Core User Journeys Supported:**
+- Casual Duo Success Path
+- Casual Duo Edge Case (Accidental Tap)
+- Club Organizer Multi-Board Setup
+- Tournament Traveler Offline Reliability
+- Tech-Savvy Hobbyist
+
+**Must-Have Capabilities:**
+- Installable offline PWA.
+- Presets plus custom time control (base, increment, delay).
+- Adaptive 80/20 hit-surface turn switching.
+- Pause, reset, undo.
+- Sound and vibration toggles.
+- Keep-screen-awake setting.
+- Orientation support (portrait/landscape).
+- Basic accessibility (large digits, high contrast).
+- Shareable link access.
+
+### Post-MVP Features
+
+**Phase 2 (Post-MVP):**
+- Move counter.
+- Simple session log.
+- Shareable presets.
+- Advanced preset library.
+
+**Phase 3 (Expansion):**
+- Theming/customization.
+- Additional convenience features that keep setup < 60 seconds.
+
+### Risk Mitigation Strategy
+
+**Technical Risks:** Adaptive 80/20 interaction may confuse users; wake-lock/visibility handling across mobile browsers. Mitigate with onboarding tips, classic 50/50 toggle, and cross-browser QA.
+**Market Risks:** Users stick with existing clocks; PWA install friction. Mitigate with shareable link access and fast, no-login start.
+**Resource Risks:** 2-person team limits cross-browser QA and polish. Mitigate by prioritizing mobile-first targets and deferring non-essentials.
