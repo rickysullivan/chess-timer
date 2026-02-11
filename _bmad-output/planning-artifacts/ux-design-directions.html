@@ -1,0 +1,450 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Chess Timer - Design Directions</title>
+    <style>
+      :root {
+        --accent: #EC7B43;
+        --bg-0: #f6f4ef;
+        --bg-1: #e9e6df;
+        --bg-2: #d9d5cd;
+        --ink-0: #1e1f1d;
+        --ink-1: #3c3f3a;
+        --ink-2: #6b6f67;
+        --shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Inter", "SF Pro Text", system-ui, -apple-system, sans-serif;
+        color: var(--ink-0);
+        background: linear-gradient(180deg, #f7f5f0, #efebe5);
+      }
+
+      header {
+        padding: 24px 24px 8px;
+      }
+
+      header h1 {
+        font-size: 20px;
+        letter-spacing: 0.02em;
+        text-transform: uppercase;
+        margin: 0 0 6px;
+      }
+
+      header p {
+        margin: 0;
+        color: var(--ink-2);
+        font-size: 13px;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 20px;
+        padding: 16px 24px 40px;
+      }
+
+      .card {
+        background: #ffffff;
+        border-radius: 16px;
+        box-shadow: var(--shadow);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .card header {
+        padding: 16px 18px 6px;
+      }
+
+      .card header h2 {
+        margin: 0 0 6px;
+        font-size: 16px;
+      }
+
+      .card header p {
+        margin: 0;
+        font-size: 12px;
+        color: var(--ink-2);
+      }
+
+      .mockup {
+        margin: 12px 16px 18px;
+        border-radius: 18px;
+        overflow: hidden;
+        border: 1px solid rgba(0, 0, 0, 0.06);
+      }
+
+      .screen {
+        height: 520px;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+      }
+
+      .safe {
+        padding: 18px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        height: 100%;
+      }
+
+      .timer {
+        flex: 1;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 44px;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+      }
+
+      .timer small {
+        font-size: 12px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      .row {
+        display: flex;
+        gap: 8px;
+      }
+
+      .pill {
+        flex: 1;
+        padding: 10px 12px;
+        border-radius: 999px;
+        font-size: 12px;
+        text-align: center;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+      }
+
+      .bar {
+        height: 54px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 14px;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+      }
+
+      .bar span {
+        color: inherit;
+      }
+
+      .split {
+        display: grid;
+        grid-template-columns: 1fr 3fr;
+        gap: 10px;
+        flex: 1;
+      }
+
+      .zone {
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 36px;
+        font-weight: 600;
+      }
+
+      .label {
+        font-size: 11px;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: inherit;
+      }
+
+      .divider {
+        height: 1px;
+        background: rgba(0, 0, 0, 0.08);
+      }
+
+      /* Direction themes */
+      .theme-a {
+        background: #f7f5f1;
+        color: #1a1c1a;
+      }
+      .theme-a .timer.active,
+      .theme-a .zone.active {
+        background: #f1e4db;
+        color: #1a1c1a;
+        border: 2px solid var(--accent);
+      }
+      .theme-a .timer.inactive,
+      .theme-a .zone.inactive {
+        background: #ece8e0;
+        color: #6b6f67;
+      }
+      .theme-a .bar {
+        background: #ece8e0;
+        color: #4b4f48;
+      }
+
+      .theme-b {
+        background: #f2f0ec;
+        color: #232422;
+      }
+      .theme-b .timer.active {
+        background: #ffffff;
+        border: 1px solid #d5d1c8;
+        box-shadow: inset 0 0 0 2px var(--accent);
+      }
+      .theme-b .timer.inactive {
+        background: #e5e1d8;
+        color: #62665f;
+      }
+      .theme-b .pill {
+        background: #e2ddd3;
+        color: #4e514b;
+      }
+
+      .theme-c {
+        background: #f5f2eb;
+        color: #1f2120;
+      }
+      .theme-c .split {
+        grid-template-columns: 1.2fr 3fr;
+      }
+      .theme-c .zone.active {
+        background: #fffaf4;
+        border: 2px solid var(--accent);
+      }
+      .theme-c .zone.inactive {
+        background: #e7e3db;
+        color: #6a6e68;
+      }
+      .theme-c .bar {
+        background: #e7e3db;
+        color: #4f534d;
+      }
+
+      .theme-d {
+        background: #f3f1ea;
+        color: #121312;
+      }
+      .theme-d .timer.active {
+        background: #1b1d1a;
+        color: #f3f1ea;
+        border: 1px solid #30322e;
+      }
+      .theme-d .timer.inactive {
+        background: #e6e2da;
+        color: #5c6059;
+      }
+      .theme-d .bar {
+        background: #e6e2da;
+        color: #4d504a;
+      }
+
+      .theme-e {
+        background: #f7f6f2;
+        color: #151615;
+      }
+      .theme-e .timer.active {
+        background: #fff6ef;
+        border: 1px solid var(--accent);
+      }
+      .theme-e .timer.inactive {
+        background: #e9e6df;
+        color: #676b65;
+      }
+      .theme-e .pill {
+        background: #f0ede7;
+        color: #4c504a;
+      }
+
+      .theme-f {
+        background: #f4f2ee;
+        color: #202120;
+      }
+      .theme-f .split {
+        grid-template-columns: 1fr 2.6fr;
+      }
+      .theme-f .zone.active {
+        background: #ffffff;
+        border: 2px solid var(--accent);
+      }
+      .theme-f .zone.inactive {
+        background: #e1ddd5;
+        color: #6b6f68;
+      }
+      .theme-f .bar {
+        background: #e1ddd5;
+        color: #4f534d;
+      }
+
+      @media (max-width: 720px) {
+        .screen {
+          height: 460px;
+        }
+        .timer,
+        .zone {
+          font-size: 36px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Design Directions</h1>
+      <p>Chess Timer - 6 visual directions based on the Teenaged Engineering + Braun inspired foundation.</p>
+    </header>
+
+    <section class="grid">
+      <article class="card">
+        <header>
+          <h2>Direction A: Soft Matte</h2>
+          <p>Calm, neutral, warm. Minimal chrome with accent focus.</p>
+        </header>
+        <div class="mockup">
+          <div class="screen theme-a">
+            <div class="safe">
+              <div class="bar"><span>10+0</span><span>Adaptive</span></div>
+              <div class="split">
+                <div class="zone inactive"><div><div class="label">Pause</div>04:52</div></div>
+                <div class="zone active"><div>05:10</div></div>
+              </div>
+              <div class="row">
+                <div class="pill">Undo</div>
+                <div class="pill">Reset</div>
+                <div class="pill">Settings</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="card">
+        <header>
+          <h2>Direction B: Clean Band</h2>
+          <p>Layered bands for controls, strong hierarchy.</p>
+        </header>
+        <div class="mockup">
+          <div class="screen theme-b">
+            <div class="safe">
+              <div class="row">
+                <div class="pill">Start</div>
+                <div class="pill">5+3</div>
+                <div class="pill">Classic</div>
+              </div>
+              <div class="timer active">05:00</div>
+              <div class="timer inactive">05:00</div>
+              <div class="row">
+                <div class="pill">Undo</div>
+                <div class="pill">Pause</div>
+                <div class="pill">Reset</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="card">
+        <header>
+          <h2>Direction C: Gridline</h2>
+          <p>Sharper edges and strong structure for precision.</p>
+        </header>
+        <div class="mockup">
+          <div class="screen theme-c">
+            <div class="safe">
+              <div class="bar"><span>Blitz</span><span>05:00</span></div>
+              <div class="split">
+                <div class="zone inactive"><div><div class="label">Pause</div>03:21</div></div>
+                <div class="zone active"><div>03:45</div></div>
+              </div>
+              <div class="divider"></div>
+              <div class="row">
+                <div class="pill">Undo</div>
+                <div class="pill">Reset</div>
+                <div class="pill">Sound</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="card">
+        <header>
+          <h2>Direction D: Dark Accent</h2>
+          <p>High clarity with dark active surface.</p>
+        </header>
+        <div class="mockup">
+          <div class="screen theme-d">
+            <div class="safe">
+              <div class="bar"><span>Rapid</span><span>10+0</span></div>
+              <div class="timer active">08:52</div>
+              <div class="timer inactive">09:12</div>
+              <div class="row">
+                <div class="pill">Undo</div>
+                <div class="pill">Pause</div>
+                <div class="pill">Reset</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="card">
+        <header>
+          <h2>Direction E: Accent Halo</h2>
+          <p>Soft accent glow and airy spacing.</p>
+        </header>
+        <div class="mockup">
+          <div class="screen theme-e">
+            <div class="safe">
+              <div class="row">
+                <div class="pill">Start</div>
+                <div class="pill">Preset</div>
+                <div class="pill">Custom</div>
+              </div>
+              <div class="timer active">05:00</div>
+              <div class="timer inactive">05:00</div>
+              <div class="row">
+                <div class="pill">Undo</div>
+                <div class="pill">Reset</div>
+                <div class="pill">Settings</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="card">
+        <header>
+          <h2>Direction F: Utility Split</h2>
+          <p>Compact controls with prominent split zones.</p>
+        </header>
+        <div class="mockup">
+          <div class="screen theme-f">
+            <div class="safe">
+              <div class="bar"><span>5+3</span><span>Adaptive</span></div>
+              <div class="split">
+                <div class="zone inactive"><div><div class="label">Pause</div>04:11</div></div>
+                <div class="zone active"><div>04:20</div></div>
+              </div>
+              <div class="row">
+                <div class="pill">Undo</div>
+                <div class="pill">Reset</div>
+                <div class="pill">Settings</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+    </section>
+  </body>
+</html>
