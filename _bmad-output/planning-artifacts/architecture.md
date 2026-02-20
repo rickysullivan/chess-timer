@@ -136,7 +136,7 @@ npm create @vite-pwa/pwa@latest chess-timer -- --template react-ts
 - Custom timer state machine (idle → running → paused → ended) for deterministic timing.
 - State management with Zustand (v5.0.11).
 - Timer updates via requestAnimationFrame with derived display time.
-- Minimal routing with React Router DOM (v7.13.0) for `/` and `/settings`.
+- Minimal routing with React Router DOM (v7.13.0) for `/` only; settings remain an in-game drawer.
 - Hosting on Cloudflare Pages with GitHub Actions CI/CD.
 - Analytics via PostHog (posthog-js v1.342.1) and error tracking via Sentry (@sentry/react v10.38.0).
 
@@ -184,7 +184,7 @@ npm create @vite-pwa/pwa@latest chess-timer -- --template react-ts
 - **State management:** Zustand v5.0.11 for app/game/settings state.  
 - **State modeling:** custom timer state machine module for deterministic transitions.  
 - **View state manager:** separate UI state mapping (setup/running/paused/ended/settings).  
-- **Routing:** React Router DOM v7.13.0 with minimal routes.  
+- **Routing:** React Router DOM v7.13.0 with minimal routes (`/` only); settings remain an in-game drawer (no full-page navigation).  
 - **Component architecture:** feature-based structure by domain.  
 - **Performance:** rAF-based timer updates; derive display time; minimize re-renders.
 
@@ -207,7 +207,7 @@ npm create @vite-pwa/pwa@latest chess-timer -- --template react-ts
 4. Implement rAF timer engine + drift handling.
 5. Add localStorage persistence + Zod validation.
 6. Configure service worker caching strategies.
-7. Add React Router minimal routes (`/`, `/settings`).
+7. Add React Router minimal routing (single `/` route; settings drawer overlay).
 8. Integrate PostHog + Sentry with anonymous session ID.
 9. Configure Cloudflare Pages + GitHub Actions pipeline.
 
@@ -568,4 +568,4 @@ chess-timer/
 - Refer to this document for all architectural questions.
 
 **First Implementation Priority:**
-- `npm create @vite-pwa/pwa@latest chess-timer -- --template react-ts`
+- Complete `/_bmad-output/planning-artifacts/engineering-setup-checklist.md` before implementation work begins.

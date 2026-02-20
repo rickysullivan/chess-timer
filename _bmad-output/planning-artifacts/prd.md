@@ -243,6 +243,7 @@ Players need a chess timer that launches instantly, works offline, and stays out
 - Offline flows: 100% pass in smoke tests after first load across supported browsers. Context: ensures reliability when network drops.
 - State preservation: game resumes correctly after 30 minutes of backgrounding/refresh; verify timers and active side unchanged. Context: prevents game loss.
 - Keep-awake effectiveness: when enabled, the screen does not dim/lock for at least 20 minutes on supported browsers; verify with a controlled 20-minute session. Context: uninterrupted play.
+- Client errors are captured and reported for reliability monitoring; error reporting does not block gameplay. Context: rapid detection and fix of issues.
 
 ### Accessibility
 - WCAG 2.1 AA compliance for contrast and interaction; verify with automated audit + manual review. Context: baseline accessibility for public users.
@@ -283,7 +284,7 @@ Players need a chess timer that launches instantly, works offline, and stays out
 ### Information Architecture
 - Landing: Preset list + Start action + Custom control entry.
 - In-game: Two large tap zones, timers, and compact controls (pause, reset, undo).
-- Settings: Sound, vibration, keep-screen-awake, contrast.
+- Settings: Bottom sheet/drawer accessible during active play; sound, vibration, keep-screen-awake, contrast.
 
 ### Interaction Details
 - Single tap switches turns with immediate visual and haptic feedback.
@@ -295,6 +296,7 @@ Players need a chess timer that launches instantly, works offline, and stays out
 - Orientation change during an active game preserves timers, active side, and control visibility without resetting.
 - If Wake Lock is unavailable, show a non-blocking banner warning during active play.
 - Invalid custom control inputs (negative values, zero base time) show inline validation and prevent start.
+- Unsupported browsers show a friendly warning and continue with degraded features.
 
 ### UX Validation Checklist
 - Background/resume: timers pause on backgrounding and resume without drift; state preserved after 30 minutes.
@@ -307,6 +309,8 @@ Players need a chess timer that launches instantly, works offline, and stays out
 - Minimal, Teenage Engineering-inspired aesthetic.
 - Large typography and strong hierarchy.
 - Neutral palette with a single accent color for active side.
+- Clean Band direction with a rotated timer display for one player (180 degrees) while controls remain upright.
+- Design system: shadcn/ui base components with custom theme.
 
 ### Component States
 - Timer Display: idle (no game), running (active side highlighted), paused (both dimmed), completed (zero time reached with end state).
@@ -444,9 +448,7 @@ Players need a chess timer that launches instantly, works offline, and stays out
 
 ## Open Questions
 
-- Exact preset list for MVP (confirm tournament and casual standards).
-- Default haptic and sound behavior on first launch.
-- Whether to include a quick “switch sides” prompt on first use.
+- None (defaults locked: presets, sound/vibration ON, onboarding cue included).
 
 ## Milestones
 
