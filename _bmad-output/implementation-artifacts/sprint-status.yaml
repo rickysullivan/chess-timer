@@ -1,0 +1,79 @@
+# generated: 2026-02-21
+# project: chess-timer
+# project_key: NOKEY
+# tracking_system: file-system
+# story_location: /Users/rickysullivan/Projects/chess-timer/_bmad-output/implementation-artifacts
+
+# STATUS DEFINITIONS:
+# ==================
+# Epic Status:
+#   - backlog: Epic not yet started
+#   - in-progress: Epic actively being worked on
+#   - done: All stories in epic completed
+#
+# Epic Status Transitions:
+#   - backlog -> in-progress: Automatically when first story is created (via create-story)
+#   - in-progress -> done: Manually when all stories reach 'done' status
+#
+# Story Status:
+#   - backlog: Story only exists in epic file
+#   - ready-for-dev: Story file created in stories folder
+#   - in-progress: Developer actively working on implementation
+#   - review: Ready for code review (via Dev's code-review workflow)
+#   - done: Story completed
+#
+# Retrospective Status:
+#   - optional: Can be completed but not required
+#   - done: Retrospective has been completed
+#
+# WORKFLOW NOTES:
+# ===============
+# - Epic transitions to 'in-progress' automatically when first story is created
+# - Stories can be worked in parallel if team capacity allows
+# - SM typically creates next story after previous one is 'done' to incorporate learnings
+# - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
+
+generated: 2026-02-21
+project: chess-timer
+project_key: NOKEY
+tracking_system: file-system
+story_location: /Users/rickysullivan/Projects/chess-timer/_bmad-output/implementation-artifacts
+
+development_status:
+  epic-1: done
+  1-1-preset-list-and-selection: done
+  1-2-custom-time-control-creation: done
+  1-3-start-game-from-selected-control: done
+  epic-1-retrospective: optional
+
+  epic-2: done
+  2-1-accurate-countdown-and-game-end: done
+  2-2-single-tap-turn-switching: done
+  2-3-adaptive-and-classic-layout-modes: done
+  2-4-pause-via-inactive-strip-and-paused-view: done
+  2-5-orientation-safe-layout-and-readability: done
+  epic-2-retrospective: optional
+
+  epic-3: done
+  3-1-pause-and-resume-controls: done
+  3-2-undo-last-turn-switch: done
+  3-3-reset-game-to-initial-control: done
+  3-4-persist-and-restore-in-progress-state: done
+  epic-3-retrospective: optional
+
+  epic-4: done
+  4-1-settings-access-without-losing-game-state: done
+  4-2-sound-and-vibration-toggles: done
+  4-3-keep-screen-awake-setting: done
+  4-4-layout-mode-preference: done
+  4-5-accessibility-modes-and-non-color-cues: done
+  epic-4-retrospective: optional
+
+  epic-5: done
+  5-1-installable-pwa-experience: done
+  5-2-offline-first-launch-and-play: done
+  5-3-local-only-persistence-and-no-account: done
+  5-4-shareable-access-and-link-sharing: done
+  5-5-last-used-control-preselected-on-return: done
+  5-6-reliability-telemetry-and-error-reporting: done
+  epic-5-retrospective: optional
