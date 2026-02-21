@@ -36,25 +36,24 @@ export function SettingsDrawer(props: SettingsDrawerProps) {
     }
   }, [isOpen, onClose])
 
+  if (!isOpen) {
+    return null
+  }
+
   return (
     <>
-      {isOpen ? (
-        <button
-          type="button"
-          aria-label="Close settings"
-          className="fixed inset-0 z-40 bg-slate-950/35"
-          onClick={onClose}
-        />
-      ) : null}
+      <button
+        type="button"
+        aria-label="Close settings"
+        className="fixed inset-0 z-40 bg-slate-950/35"
+        onClick={onClose}
+      />
 
       <section
         role="dialog"
         aria-modal="true"
-        aria-hidden={!isOpen}
         aria-labelledby="settings-drawer-title"
-        className={`fixed inset-x-0 bottom-0 z-50 rounded-t-3xl border border-slate-200 bg-white shadow-2xl transition-transform duration-200 ease-out ${
-          isOpen ? 'translate-y-0' : 'pointer-events-none translate-y-full'
-        }`}
+        className="fixed inset-x-0 bottom-0 z-50 rounded-t-3xl border border-slate-200 bg-white shadow-2xl"
       >
         <div className="mx-auto w-full max-w-xl px-5 pb-6 pt-4">
           <div className="flex items-center justify-between">
