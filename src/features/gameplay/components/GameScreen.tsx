@@ -1,6 +1,6 @@
 import { Clock3, RotateCcw, Undo2 } from 'lucide-react'
 import { useEffect, type ReactNode } from 'react'
-import { Button } from '@/components/ui/button'
+import { Button } from '@heroui/react'
 import { formatMs, type ActionMessageTone, type AppSettings, type Side, type TimeControl } from '@/app/types'
 
 type GameScreenProps = {
@@ -173,7 +173,7 @@ export function GameScreen(props: GameScreenProps) {
                 {props.timeoutSide ? null : (
                   <Button
                     className="w-full"
-                    onClick={props.onPauseResume}
+                    onPress={props.onPauseResume}
                     aria-label={`Resume game with ${props.activeSide} to move`}
                   >
                     Resume ({props.activeSide} to move)
@@ -229,7 +229,7 @@ export function GameScreen(props: GameScreenProps) {
 
             {isEnded ? (
               <div className="mt-4" role="group" aria-label="Game end controls">
-                <Button className="w-full" variant="outline" onClick={props.onReset} aria-label="Reset game to initial time control">
+                <Button className="w-full" variant="outline" onPress={props.onReset} aria-label="Reset game to initial time control">
                   <RotateCcw className="mr-2 size-4" />
                   Reset
                 </Button>
@@ -238,17 +238,17 @@ export function GameScreen(props: GameScreenProps) {
               <div className="mt-4 grid grid-cols-3 gap-2" role="group" aria-label="In-game controls">
                 <Button
                   variant="outline"
-                  onClick={props.onPauseResume}
-                  disabled={Boolean(props.timeoutSide)}
+                  onPress={props.onPauseResume}
+                  isDisabled={Boolean(props.timeoutSide)}
                   aria-label={props.isPaused ? 'Resume game' : 'Pause game'}
                 >
                   {props.isPaused ? 'Resume' : 'Pause'}
                 </Button>
-                <Button variant="outline" onClick={props.onUndo} disabled={!props.canUndo} aria-label="Undo last turn switch">
+                <Button variant="outline" onPress={props.onUndo} isDisabled={!props.canUndo} aria-label="Undo last turn switch">
                   <Undo2 className="mr-2 size-4" />
                   Undo
                 </Button>
-                <Button variant="outline" onClick={props.onReset} aria-label="Reset game to initial time control">
+                <Button variant="outline" onPress={props.onReset} aria-label="Reset game to initial time control">
                   <RotateCcw className="mr-2 size-4" />
                   Reset
                 </Button>
@@ -258,7 +258,7 @@ export function GameScreen(props: GameScreenProps) {
         </section>
 
         <div className="mt-auto grid gap-3 pt-8">
-          <Button onClick={props.onBackToSetup} aria-label="Return to setup screen" disabled={isEnded}>
+          <Button onPress={props.onBackToSetup} aria-label="Return to setup screen" isDisabled={isEnded}>
             Back to Setup
           </Button>
         </div>

@@ -1,6 +1,6 @@
 import { Check, Clock3 } from 'lucide-react'
 import type { ReactNode } from 'react'
-import { Button } from '@/components/ui/button'
+import { Button } from '@heroui/react'
 import { PRESETS, type ActionMessageTone, type ControlSource, type TimeControl } from '@/app/types'
 
 type SetupScreenProps = {
@@ -225,8 +225,8 @@ export function SetupScreen(props: SetupScreenProps) {
           <Button
             className="w-full"
             size="lg"
-            onClick={props.onStart}
-            disabled={!props.canStart}
+            onPress={props.onStart}
+            isDisabled={!props.canStart}
             aria-label={props.selectedControl ? `Start game with ${props.selectedControl.label}` : 'Start game'}
           >
             {props.selectedControl ? `Start ${props.selectedControl.label}` : 'Start Game'}
