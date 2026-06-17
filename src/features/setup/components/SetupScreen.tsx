@@ -1,4 +1,3 @@
-import { Clock3 } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { Button } from '@heroui/react'
 import { PRESETS, type ActionMessageTone, type ControlSource, type TimeControl } from '@/app/types'
@@ -37,8 +36,7 @@ export function SetupScreen(props: SetupScreenProps) {
     <main className="min-h-screen bg-slate-100">
       <div className="mx-auto flex min-h-screen w-full max-w-xl flex-col px-5 py-8 md:py-10">
         <div className="mb-6 flex items-center justify-between gap-3">
-          <div className="inline-flex w-fit items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm">
-            <Clock3 className="size-4" />
+          <div className="inline-flex w-fit items-center gap-2 rounded-full bg-slate-900 px-3.5 py-1.5 text-sm font-semibold text-white">
             chess-timer
           </div>
           {props.headerActions}

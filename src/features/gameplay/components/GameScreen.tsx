@@ -1,4 +1,4 @@
-import { Clock3, RotateCcw, Undo2 } from 'lucide-react'
+import { RotateCcw, Undo2 } from 'lucide-react'
 import { useCallback, useEffect, useState, type ReactNode } from 'react'
 import { AlertDialog, Button } from '@heroui/react'
 import { formatMs, type ActionMessageTone, type AppSettings, type Side, type TimeControl } from '@/app/types'
@@ -62,10 +62,9 @@ export function GameScreen(props: GameScreenProps) {
     <main className="flex min-h-screen flex-col bg-slate-100">
       <div className="mx-auto flex w-full max-w-xl flex-1 flex-col px-5 py-4 md:py-6">
         <div className="flex items-center justify-between gap-3">
-          <div className="inline-flex w-fit items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm">
-            <Clock3 className="size-4" />
+          <div className="inline-flex w-fit items-center gap-2 rounded-full bg-slate-900 px-3.5 py-1.5 text-sm font-semibold text-white">
             chess-timer
-            <span className="rounded-full bg-orange-100 px-2 py-0.5 text-xs font-semibold text-orange-700">
+            <span className="rounded-full bg-orange-400/20 px-2 py-0.5 text-xs font-semibold text-orange-300">
               {props.startedControl.label}
             </span>
           </div>
