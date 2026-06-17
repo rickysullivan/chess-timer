@@ -410,9 +410,6 @@ function App() {
   const handleReset = () => {
     if (!startedControl) return
 
-    const confirmed = window.confirm('Reset game and clear undo history?')
-    if (!confirmed) return
-
     captureEvent('reset', buildCoreEventProperties({ includeElapsedSeconds: true }))
     resetGame()
   }
