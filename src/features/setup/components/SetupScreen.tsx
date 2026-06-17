@@ -105,7 +105,7 @@ export function SetupScreen(props: SetupScreenProps) {
         </section>
 
         {props.controlSource === 'preset' ? (
-          <section className="mt-4 rounded-2xl border border-slate-200 bg-white p-3 shadow-sm">
+          <section className="mt-4 animate-fade-in rounded-2xl border border-slate-200 bg-white p-3 shadow-sm">
             <h2 className="px-2 pb-2 text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">Presets</h2>
 
             <div className="grid gap-2" role="listbox" aria-label="Time control presets">
@@ -146,7 +146,7 @@ export function SetupScreen(props: SetupScreenProps) {
             </div>
           </section>
         ) : (
-          <section className="mt-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm" aria-label="Custom time control">
+          <section className="mt-4 animate-fade-in rounded-2xl border border-slate-200 bg-white p-4 shadow-sm" aria-label="Custom time control">
             <h2 className="pb-2 text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">Custom control</h2>
 
             <div className="grid gap-4">

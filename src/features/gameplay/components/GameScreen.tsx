@@ -114,7 +114,7 @@ export function GameScreen(props: GameScreenProps) {
           ) : null}
 
           {props.isPaused && !isEnded ? (
-            <div className="mt-3 flex flex-1 flex-col gap-3" aria-live="polite">
+            <div className="mt-3 flex flex-1 flex-col gap-3 animate-fade-in" aria-live="polite">
               <div className="grid flex-1 grid-cols-2 gap-2" role="group" aria-label="Paused timers">
                 <div className={`flex flex-col justify-center rounded-xl border px-4 py-4 text-left ${props.settings.highContrastMode ? 'border-2 border-slate-800 bg-white text-slate-900' : 'border border-slate-200 bg-slate-50 text-slate-900'}`}>
                   <p className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">White</p>
@@ -138,7 +138,7 @@ export function GameScreen(props: GameScreenProps) {
               </Button>
             </div>
           ) : isEnded ? (
-            <div className="mt-3 flex flex-1 flex-col gap-3" aria-live="polite">
+            <div className="mt-3 flex flex-1 flex-col gap-3 animate-fade-in" aria-live="polite">
               <div className="grid flex-1 grid-cols-2 gap-2" role="group" aria-label="Game ended timers">
                 <div className={`flex flex-col justify-center rounded-xl border px-4 py-4 text-left ${props.timeoutSide === 'White' ? 'border border-slate-200 bg-slate-100 opacity-60' : 'border-2 border-emerald-400 bg-emerald-50 text-emerald-900'}`}>
                   <p className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">White</p>
