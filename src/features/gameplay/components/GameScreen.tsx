@@ -63,7 +63,7 @@ export function GameScreen(props: GameScreenProps) {
       <div className="mx-auto flex w-full max-w-xl flex-1 flex-col px-5 py-4 md:py-6">
         <div className="flex items-center justify-between gap-3">
           <div className="inline-flex w-fit items-center gap-2 rounded-full bg-slate-900 px-3.5 py-1.5 text-sm font-semibold text-white">
-            chess-timer
+            Zugzwang
             <span className="rounded-full bg-orange-400/20 px-2 py-0.5 text-xs font-semibold text-orange-300">
               {props.startedControl.label}
             </span>
@@ -146,7 +146,9 @@ export function GameScreen(props: GameScreenProps) {
                   </p>
                   {props.timeoutSide === 'White' ? (
                     <p className="mt-1 text-xs font-semibold uppercase tracking-[0.12em] text-red-600">Time Out</p>
-                  ) : null}
+                  ) : (
+                    <p className="mt-1 text-xs font-semibold uppercase tracking-[0.12em] text-emerald-700">White wins!</p>
+                  )}
                 </div>
                 <div className={`flex flex-col justify-center rounded-xl border px-4 py-4 text-left ${props.timeoutSide === 'Black' ? 'border border-slate-200 bg-slate-100 opacity-60' : 'border-2 border-emerald-400 bg-emerald-50 text-emerald-900'}`}>
                   <p className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">Black</p>
@@ -155,13 +157,11 @@ export function GameScreen(props: GameScreenProps) {
                   </p>
                   {props.timeoutSide === 'Black' ? (
                     <p className="mt-1 text-xs font-semibold uppercase tracking-[0.12em] text-red-600">Time Out</p>
-                  ) : null}
+                  ) : (
+                    <p className="mt-1 text-xs font-semibold uppercase tracking-[0.12em] text-emerald-700">Black wins!</p>
+                  )}
                 </div>
               </div>
-              <p className="text-center text-sm font-semibold text-red-600" role="alert">
-                {props.timeoutSide} ran out of time.{' '}
-                {props.timeoutSide === 'White' ? 'Black wins!' : 'White wins!'}
-              </p>
               <div className="grid grid-cols-2 gap-2" role="group" aria-label="Game end controls">
                 <Button
                   variant="outline"

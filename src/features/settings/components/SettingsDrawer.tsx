@@ -17,7 +17,7 @@ export function SettingsDrawer(props: SettingsDrawerProps) {
         <Drawer.Content placement="bottom">
           <Drawer.Dialog className="rounded-t-2xl">
             <Drawer.Handle />
-            <Drawer.CloseTrigger />
+            <Drawer.CloseTrigger className="rounded-full bg-slate-100 text-slate-600 hover:bg-slate-200 hover:text-slate-900" />
             <Drawer.Header>
               <Drawer.Heading>Settings</Drawer.Heading>
             </Drawer.Header>

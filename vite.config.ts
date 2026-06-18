@@ -6,6 +6,9 @@ import { VitePWA } from 'vite-plugin-pwa'
 
 // https://vite.dev/config/
 export default defineConfig({
+  server: {
+    host: true,
+  },
   plugins: [
     react(),
     tailwindcss(),
@@ -13,13 +16,13 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['vite.svg'],
       manifest: {
-        name: 'Chess Timer',
-        short_name: 'ChessTimer',
+        name: 'Zugzwang',
+        short_name: 'Zugzwang',
         description: 'A modern chess timer web app',
         start_url: '/',
         display: 'standalone',
-        background_color: '#ffffff',
-        theme_color: '#0f172a',
+        background_color: '#f1f5f9',
+        theme_color: '#f1f5f9',
         icons: [
           {
             src: '/vite.svg',

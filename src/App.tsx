@@ -415,6 +415,7 @@ function App() {
   }
 
   const handlePresetSelect = (presetId: string) => {
+    setControlSource('preset')
     setSelectedPreset(presetId)
 
     const selected = PRESETS.find((preset) => preset.id === presetId)
@@ -448,13 +449,13 @@ function App() {
   ) : null
 
   const headerActions = (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-1.5 sm:gap-2">
       {canInstall ? (
         <button
           type="button"
           onClick={() => void handleInstall()}
           aria-label="Install app"
-          className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 shadow-sm transition hover:bg-slate-50"
+          className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-2.5 py-1.5 text-sm font-medium text-slate-700 shadow-sm transition hover:bg-slate-50"
         >
           <Download className="size-4" />
           Install
@@ -464,10 +465,10 @@ function App() {
         type="button"
         onClick={() => void handleShare()}
         aria-label="Share app link"
-        className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 shadow-sm transition hover:bg-slate-50"
+        className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-2.5 py-1.5 text-sm font-medium text-slate-700 shadow-sm transition hover:bg-slate-50"
       >
         <Share2 className="size-4" />
-        Share
+        <span className="hidden sm:inline">Share</span>
       </button>
       <button
         type="button"
@@ -475,10 +476,10 @@ function App() {
         aria-label="Open settings"
         aria-haspopup="dialog"
         aria-expanded={isSettingsOpen}
-        className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 shadow-sm transition hover:bg-slate-50"
+        className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-2.5 py-1.5 text-sm font-medium text-slate-700 shadow-sm transition hover:bg-slate-50"
       >
         <Settings2 className="size-4" />
-        Settings
+        <span className="hidden sm:inline">Settings</span>
       </button>
     </div>
   )
