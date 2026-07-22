@@ -14,7 +14,7 @@ export default defineConfig({
     tailwindcss(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['vite.svg'],
+      includeAssets: ['icons/zugzwang-mark.svg', 'icons/apple-touch-icon.png'],
       manifest: {
         name: 'Zugzwang',
         short_name: 'Zugzwang',
@@ -25,14 +25,16 @@ export default defineConfig({
         theme_color: '#f1f5f9',
         icons: [
           {
-            src: '/vite.svg',
+            src: '/icons/icon-192.png',
             sizes: '192x192',
-            type: 'image/svg+xml',
+            type: 'image/png',
+            purpose: 'any maskable',
           },
           {
-            src: '/vite.svg',
+            src: '/icons/icon-512.png',
             sizes: '512x512',
-            type: 'image/svg+xml',
+            type: 'image/png',
+            purpose: 'any maskable',
           },
         ],
       },

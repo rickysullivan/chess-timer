@@ -1,0 +1,47 @@
+- main [ref=e79]:
+  - generic [ref=e80]:
+    - generic [ref=e81]:
+      - generic [ref=e82]:
+        - img [ref=e83]
+        - text: chess-timer
+      - generic [ref=e86]:
+        - button "Share app link" [ref=e87] [cursor=pointer]:
+          - img [ref=e88]
+          - text: Share
+        - button "Open settings" [ref=e94] [cursor=pointer]:
+          - img [ref=e95]
+          - text: Settings
+    - paragraph [ref=e98]: Game resumed.
+    - heading "Game started." [level=1] [ref=e99]
+    - paragraph [ref=e100]: Tap your active side to switch. Tap the small strip to pause.
+    - generic [ref=e101]:
+      - paragraph [ref=e102]: Tap your side to switch. Tap the small strip to pause.
+      - button "Dismiss onboarding tip" [ref=e103] [cursor=pointer]: Dismiss
+    - generic [ref=e104]:
+      - heading "Active control" [level=2] [ref=e105]
+      - generic [ref=e106]:
+        - paragraph [ref=e107]: 1+0
+        - paragraph [ref=e108]: 1 min base, +0s increment, 0s delay
+        - paragraph [ref=e109]: Preset control
+      - generic [ref=e110]:
+        - paragraph [ref=e111]: Timers
+        - paragraph [ref=e112]: White to move
+        - generic [ref=e113]:
+          - button "White active timer. 01:00. Tap to pass turn." [ref=e114] [cursor=pointer]:
+            - paragraph [ref=e115]: White (active)
+            - paragraph [ref=e116]: 01:00
+            - paragraph [ref=e117]: Tap to pass turn
+          - button "Black inactive timer. 01:00. Tap to pause game." [ref=e118] [cursor=pointer]:
+            - paragraph [ref=e119]: Black
+            - paragraph [ref=e120]:
+              - generic [ref=e121]: 01:00
+            - paragraph [ref=e122]: Tap to pause
+        - group "In-game controls" [ref=e123]:
+          - button "Pause game" [ref=e124] [cursor=pointer]: Pause
+          - button "Undo last turn switch" [disabled]:
+            - img
+            - text: Undo
+          - button "Reset game to initial time control" [ref=e125] [cursor=pointer]:
+            - img [ref=e126]
+            - text: Reset
+    - button "Return to setup screen" [ref=e130] [cursor=pointer]: Back to Setup

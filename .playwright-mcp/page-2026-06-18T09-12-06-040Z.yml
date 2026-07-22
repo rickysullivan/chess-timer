@@ -1,0 +1,34 @@
+- main [ref=e48]:
+  - generic [ref=e49]:
+    - generic [ref=e50]:
+      - generic [ref=e51]:
+        - text: chess-timer
+        - generic [ref=e52]: 1+0
+      - generic [ref=e53]:
+        - button "Share app link" [ref=e54]:
+          - img [ref=e55]
+          - generic [ref=e61]: Share
+        - button "Open settings" [ref=e62]:
+          - img [ref=e63]
+          - generic [ref=e66]: Settings
+    - paragraph [ref=e70]: Game paused.
+    - generic [ref=e71]:
+      - paragraph [ref=e72]: White to move
+      - generic [ref=e73]:
+        - group "Paused timers" [ref=e89]:
+          - generic [ref=e90]:
+            - paragraph [ref=e91]: White
+            - paragraph [ref=e92]: 00:51
+          - generic [ref=e94]:
+            - paragraph [ref=e95]: Black
+            - paragraph [ref=e96]: 01:00
+        - button "Resume game with White to move" [ref=e97] [cursor=pointer]: Resume (White to move)
+    - generic [ref=e98]:
+      - group "Paused game controls" [ref=e99]:
+        - button "Undo last turn switch" [disabled]:
+          - img
+          - text: Undo
+        - button "Reset game to initial time control" [ref=e100] [cursor=pointer]:
+          - img
+          - text: Reset
+      - button "Return to setup screen" [ref=e84] [cursor=pointer]: Back to Setup

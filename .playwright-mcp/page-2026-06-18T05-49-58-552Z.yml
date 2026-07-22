@@ -1,0 +1,30 @@
+- main [ref=e3]:
+  - generic [ref=e4]:
+    - generic [ref=e5]:
+      - generic [ref=e6]:
+        - text: chess-timer
+        - generic [ref=e7]: 1+0
+      - generic [ref=e8]:
+        - button "Share app link" [ref=e9]:
+          - img [ref=e10]
+        - button "Open settings" [ref=e16]:
+          - img [ref=e17]
+    - paragraph [ref=e20]: Previous game restored.
+    - generic [ref=e21]:
+      - paragraph [ref=e22]: Black to move
+      - generic [ref=e23]:
+        - group "Game ended timers" [ref=e24]:
+          - generic [ref=e25]:
+            - paragraph [ref=e26]: White
+            - paragraph [ref=e27]: 00:54
+          - generic [ref=e28]:
+            - paragraph [ref=e29]: Black
+            - paragraph [ref=e30]:
+              - generic [ref=e31]: 00:00
+            - paragraph [ref=e32]: Time Out
+        - alert [ref=e33]: Black ran out of time. White wins!
+        - group "Game end controls" [ref=e34]:
+          - button "Return to setup screen" [ref=e35] [cursor=pointer]: Back to Setup
+          - button "Reset game to initial time control" [ref=e36] [cursor=pointer]:
+            - img
+            - text: Reset

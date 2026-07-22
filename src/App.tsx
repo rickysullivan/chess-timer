@@ -1,4 +1,4 @@
-import { Download, Settings2, Share2 } from 'lucide-react'
+import { Download, Settings, SquareArrowUp } from 'lucide-react'
 import { useCallback, useMemo, useState } from 'react'
 import { useActionMessage } from '@/app/hooks/useActionMessage'
 import { useGameTicker } from '@/app/hooks/useGameTicker'
@@ -344,7 +344,6 @@ function App() {
     }
 
     if (result.outcome === 'canceled') {
-      showActionMessage('info', 'Share canceled.')
       return
     }
 
@@ -449,38 +448,44 @@ function App() {
   ) : null
 
   const headerActions = (
-    <div className="flex items-center gap-1.5 sm:gap-2">
+    <div className="flex items-center gap-2">
       {canInstall ? (
         <button
           type="button"
           onClick={() => void handleInstall()}
           aria-label="Install app"
-          className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-2.5 py-1.5 text-sm font-medium text-slate-700 shadow-sm transition hover:bg-slate-50"
+          className="inline-flex h-11 items-center gap-2 rounded-full bg-white px-4 text-sm font-medium text-slate-700 shadow-sm ring-1 ring-slate-200 transition hover:bg-slate-50 hover:text-slate-900"
         >
           <Download className="size-4" />
           Install
         </button>
       ) : null}
-      <button
-        type="button"
-        onClick={() => void handleShare()}
-        aria-label="Share app link"
-        className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-2.5 py-1.5 text-sm font-medium text-slate-700 shadow-sm transition hover:bg-slate-50"
+      <div
+        role="toolbar"
+        aria-label="App actions"
+        className="inline-flex items-center rounded-full bg-white p-1 shadow-sm ring-1 ring-slate-200"
       >
-        <Share2 className="size-4" />
-        <span className="hidden sm:inline">Share</span>
-      </button>
-      <button
-        type="button"
-        onClick={() => setIsSettingsOpen(true)}
-        aria-label="Open settings"
-        aria-haspopup="dialog"
-        aria-expanded={isSettingsOpen}
-        className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-2.5 py-1.5 text-sm font-medium text-slate-700 shadow-sm transition hover:bg-slate-50"
-      >
-        <Settings2 className="size-4" />
-        <span className="hidden sm:inline">Settings</span>
-      </button>
+        <button
+          type="button"
+          onClick={() => void handleShare()}
+          aria-label="Share app link"
+          title="Share"
+          className="inline-flex size-11 items-center justify-center rounded-full text-slate-600 transition hover:bg-slate-100 hover:text-slate-900"
+        >
+          <SquareArrowUp className="size-[18px]" />
+        </button>
+        <button
+          type="button"
+          onClick={() => setIsSettingsOpen(true)}
+          aria-label="Open settings"
+          aria-haspopup="dialog"
+          aria-expanded={isSettingsOpen}
+          title="Settings"
+          className="inline-flex size-11 items-center justify-center rounded-full text-slate-600 transition hover:bg-slate-100 hover:text-slate-900"
+        >
+          <Settings className="size-[18px]" />
+        </button>
+      </div>
     </div>
   )
 

@@ -36,8 +36,14 @@ export function SetupScreen(props: SetupScreenProps) {
     <main className="min-h-screen bg-slate-100">
       <div className="mx-auto flex min-h-screen w-full max-w-xl flex-col px-5 py-8 md:py-10">
         <div className="mb-6 flex items-center justify-between gap-2">
-          <div className="inline-flex items-center gap-1.5 rounded-full bg-slate-900 px-3 py-1 text-sm font-semibold text-white sm:px-3.5 sm:py-1.5">
-            Zugzwang
+          <div className="flex items-center gap-2.5">
+            <img
+              src="/icons/zugzwang-mark.svg"
+              alt=""
+              aria-hidden="true"
+              className="size-8 rounded-lg shadow-sm"
+            />
+            <p className="text-base font-bold tracking-tight text-slate-950">Zugzwang</p>
           </div>
           {props.headerActions}
         </div>
