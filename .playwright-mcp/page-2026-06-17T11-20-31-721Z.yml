@@ -1,0 +1,48 @@
+- main [ref=e3]:
+  - generic [ref=e4]:
+    - generic [ref=e5]:
+      - generic [ref=e6]: chess-timer
+      - generic [ref=e7]:
+        - button "Share app link" [ref=e8]:
+          - img [ref=e9]
+          - text: Share
+        - button "Open settings" [ref=e15]:
+          - img [ref=e16]
+          - text: Settings
+    - paragraph [ref=e19]
+    - heading "Pick a preset and start in seconds." [level=1] [ref=e20]
+    - paragraph [ref=e21]: Clean, focused, and built for fast over-the-board play.
+    - generic [ref=e22]:
+      - heading "Control type" [level=2] [ref=e23]
+      - group "Time control type" [ref=e24]:
+        - button "Use preset time controls" [pressed] [ref=e25]: Preset
+        - button "Use custom time controls" [ref=e26]: Custom
+    - generic [ref=e27]:
+      - heading "Presets" [level=2] [ref=e28]
+      - listbox "Time control presets" [ref=e29]:
+        - option "Select preset 1+0, Bullet" [selected] [ref=e30]:
+          - generic [ref=e31]:
+            - generic [ref=e32]: 1+0
+            - generic [ref=e33]: Bullet
+          - img [ref=e35]
+        - option "Select preset 3+2, Blitz" [ref=e37]:
+          - generic [ref=e38]:
+            - generic [ref=e39]: 3+2
+            - generic [ref=e40]: Blitz
+        - option "Select preset 5+0, Blitz" [ref=e42]:
+          - generic [ref=e43]:
+            - generic [ref=e44]: 5+0
+            - generic [ref=e45]: Blitz
+        - option "Select preset 10+0, Rapid" [ref=e47]:
+          - generic [ref=e48]:
+            - generic [ref=e49]: 10+0
+            - generic [ref=e50]: Rapid
+        - option "Select preset 15+10, Rapid +" [ref=e52]:
+          - generic [ref=e53]:
+            - generic [ref=e54]: 15+10
+            - generic [ref=e55]: Rapid +
+        - option "Select preset 30+0, Classical" [ref=e57]:
+          - generic [ref=e58]:
+            - generic [ref=e59]: 30+0
+            - generic [ref=e60]: Classical
+    - button "Start game with 1+0" [ref=e63] [cursor=pointer]: Start 1+0

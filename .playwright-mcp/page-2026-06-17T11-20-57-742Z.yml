@@ -1,0 +1,50 @@
+- generic [ref=e1]:
+  - main [ref=e64]:
+    - generic [ref=e65]:
+      - generic [ref=e66]:
+        - generic [ref=e67]:
+          - text: chess-timer
+          - generic [ref=e68]: 1+0
+        - generic [ref=e69]:
+          - button "Share app link" [ref=e70]:
+            - img [ref=e71]
+            - text: Share
+          - button "Open settings" [ref=e77]:
+            - img [ref=e78]
+            - text: Settings
+      - paragraph [ref=e81]: Game resumed.
+      - generic [ref=e85]:
+        - paragraph [ref=e86]: White to move
+        - generic [ref=e87]:
+          - button "White active timer. 00:45. Tap to pass turn." [ref=e103]:
+            - paragraph [ref=e89]: White (active)
+            - paragraph [ref=e90]: 00:45
+            - paragraph [ref=e91]: Tap to pass turn
+          - button "Black inactive timer. 01:00. Tap to pause game." [ref=e92]:
+            - paragraph [ref=e93]: Black
+            - paragraph [ref=e94]:
+              - generic [ref=e95]: 01:00
+            - paragraph [ref=e96]: Tap to pause
+      - group "In-game controls" [ref=e97]:
+        - button "Pause game" [ref=e98] [cursor=pointer]: Pause
+        - button "Undo last turn switch" [disabled]:
+          - img
+          - text: Undo
+        - button "Reset game to initial time control" [ref=e99] [cursor=pointer]:
+          - img
+          - text: Reset
+      - button "Return to setup screen" [ref=e101] [cursor=pointer]: Back to Setup
+  - generic [ref=e104]:
+    - generic:
+      - generic:
+        - button "Dismiss"
+      - alertdialog "Reset game?" [active] [ref=e105]:
+        - button "Close" [ref=e106] [cursor=pointer]:
+          - img
+        - generic [ref=e107]:
+          - img [ref=e109]
+          - heading "Reset game?" [level=2] [ref=e111]
+        - paragraph [ref=e113]: This will reset the game and clear undo history. This action cannot be undone.
+        - generic [ref=e114]:
+          - button "Cancel" [ref=e115] [cursor=pointer]
+          - button "Reset" [ref=e116] [cursor=pointer]

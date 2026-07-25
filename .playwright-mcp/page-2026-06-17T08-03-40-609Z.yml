@@ -1,0 +1,44 @@
+- main [ref=e79]:
+  - generic [ref=e80]:
+    - generic [ref=e81]:
+      - generic [ref=e82]:
+        - img [ref=e83]
+        - text: chess-timer
+      - generic [ref=e86]:
+        - button "Share app link" [ref=e87] [cursor=pointer]:
+          - img [ref=e88]
+          - text: Share
+        - button "Open settings" [ref=e94] [cursor=pointer]:
+          - img [ref=e95]
+          - text: Settings
+    - paragraph [ref=e98]: Game paused.
+    - heading "Game started." [level=1] [ref=e99]
+    - paragraph [ref=e100]: Game is paused. Resume when both players are ready.
+    - generic [ref=e104]:
+      - heading "Active control" [level=2] [ref=e105]
+      - generic [ref=e106]:
+        - paragraph [ref=e107]: 1+0
+        - paragraph [ref=e108]: 1 min base, +0s increment, 0s delay
+        - paragraph [ref=e109]: Preset control
+      - generic [ref=e110]:
+        - paragraph [ref=e111]: Timers
+        - paragraph [ref=e112]: White to move
+        - generic [ref=e113]:
+          - group "Paused timers" [ref=e132]:
+            - generic [ref=e133]:
+              - paragraph [ref=e134]: White
+              - paragraph [ref=e135]: 00:44
+            - generic [ref=e136]:
+              - paragraph [ref=e137]: Black
+              - paragraph [ref=e138]:
+                - generic [ref=e139]: 01:00
+          - button "Resume game with White to move" [ref=e140] [cursor=pointer]: Resume (White to move)
+        - group "In-game controls" [ref=e123]:
+          - button "Resume game" [active] [ref=e141] [cursor=pointer]: Resume
+          - button "Undo last turn switch" [disabled]:
+            - img
+            - text: Undo
+          - button "Reset game to initial time control" [ref=e125] [cursor=pointer]:
+            - img [ref=e126]
+            - text: Reset
+    - button "Return to setup screen" [ref=e130] [cursor=pointer]: Back to Setup

@@ -1,0 +1,31 @@
+- main [ref=e48]:
+  - generic [ref=e49]:
+    - generic:
+      - generic [ref=e50]:
+        - generic [ref=e51]:
+          - text: chess-timer
+          - generic [ref=e52]: 1+0
+        - generic [ref=e53]:
+          - button "Share app link" [ref=e54]:
+            - img [ref=e55]
+            - generic [ref=e61]: Share
+          - button "Open settings" [ref=e62]:
+            - img [ref=e63]
+            - generic [ref=e66]: Settings
+      - generic [ref=e67]:
+        - paragraph [ref=e68]: Tap your side to switch. Tap the small strip to pause.
+        - button "Dismiss onboarding tip" [ref=e69]: Dismiss
+    - paragraph [ref=e70]: Game resumed.
+    - generic [ref=e71]:
+      - paragraph [ref=e72]: White to move
+      - generic [ref=e73]:
+        - button "White active timer. 01:00. Tap to pass turn." [ref=e74]:
+          - paragraph [ref=e75]: White (active)
+          - paragraph [ref=e76]: 01:00
+          - paragraph [ref=e77]: Tap to pass turn
+        - button "Black inactive timer. 01:00. Tap to pause game." [ref=e78]:
+          - generic [ref=e79]:
+            - paragraph [ref=e80]: Black
+            - paragraph [ref=e81]: 01:00
+            - paragraph [ref=e82]: Tap to pause
+    - button "Return to setup screen" [ref=e84] [cursor=pointer]: Back to Setup

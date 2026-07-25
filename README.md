@@ -21,6 +21,20 @@ npm run build
 npm run preview
 ```
 
+## Testing
+
+Run the full local quality gate:
+
+```bash
+npm run test:run
+npm run lint
+npm run build
+```
+
+Notes:
+- Unit tests currently focus on store timing logic (delay, increment, undo, timeout, restore TTL).
+- Vitest is configured with `jsdom` in `vite.config.ts`.
+
 ## Environment variables
 
 Copy `.env.example` to `.env` and set the values:
