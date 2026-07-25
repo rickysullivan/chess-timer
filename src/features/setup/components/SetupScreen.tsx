@@ -2,6 +2,24 @@ import type { ReactNode } from 'react'
 import { Button } from '@heroui/react'
 import { PRESETS, type ActionMessageTone, type ControlSource, type TimeControl } from '@/app/types'
 
+const presetStyleCues: Record<string, string> = {
+  '1+0': 'Fast game, no time to waste.',
+  '3+2': 'Fast game with a little breathing room.',
+  '5+0': 'Quick game for casual play.',
+  '10+0': 'A balanced game with room to think.',
+  '15+10': 'Longer game with time to plan.',
+  '30+0': 'A full-length classical game.',
+}
+
+const describeTimeControl = (control: TimeControl) => {
+  const base = `${control.baseMinutes} minute${control.baseMinutes === 1 ? '' : 's'} each`
+  const increment = control.incrementSeconds
+    ? `+${control.incrementSeconds} second${control.incrementSeconds === 1 ? '' : 's'} after every move`
+    : 'no added time'
+
+  return `${base}, ${increment}.`
+}
+
 type SetupScreenProps = {
   headerActions: ReactNode
   warningBanner: ReactNode
@@ -12,10 +30,8 @@ type SetupScreenProps = {
   selectedPreset: string
   customBaseMinutes: string
   customIncrementSeconds: string
-  customDelaySeconds: string
   showCustomBaseError: string | false | null
   showCustomIncrementError: string | false | null
-  showCustomDelayError: string | false | null
   selectedControl: TimeControl | null
   startError: string | null
   attemptedStart: boolean
@@ -24,14 +40,15 @@ type SetupScreenProps = {
   onPresetSelect: (presetId: string) => void
   onCustomBaseMinutesChange: (value: string) => void
   onCustomIncrementSecondsChange: (value: string) => void
-  onCustomDelaySecondsChange: (value: string) => void
   onCustomBaseBlur: () => void
   onCustomIncrementBlur: () => void
-  onCustomDelayBlur: () => void
   onStart: () => void
 }
 
 export function SetupScreen(props: SetupScreenProps) {
+  const selectedPresetDetails = PRESETS.find((preset) => preset.id === props.selectedPreset)
+  const selectedStyleCue = selectedPresetDetails ? presetStyleCues[selectedPresetDetails.id] : null
+
   return (
     <main className="min-h-screen bg-slate-100">
       <div className="mx-auto flex min-h-screen w-full max-w-xl flex-col px-5 py-8 md:py-10">
@@ -89,7 +106,7 @@ export function SetupScreen(props: SetupScreenProps) {
                   onClick={() => props.onPresetSelect(preset.id)}
                   className={`flex flex-col items-center rounded-xl border px-2 py-3 text-center transition ${
                     isSelected
-                      ? 'border-orange-300 bg-orange-50 ring-1 ring-orange-300/40'
+                      ? 'border-orange-300 bg-orange-50'
                       : 'border-slate-200 bg-white hover:bg-slate-50'
                   }`}
                 >
@@ -107,13 +124,20 @@ export function SetupScreen(props: SetupScreenProps) {
               onClick={() => props.onControlSourceChange('custom')}
               className={`flex items-center justify-center rounded-xl border px-2 py-3 text-center transition ${
                 props.controlSource === 'custom'
-                  ? 'border-orange-300 bg-orange-50 ring-1 ring-orange-300/40'
+                  ? 'border-orange-300 bg-orange-50'
                   : 'border-slate-200 bg-white hover:bg-slate-50'
               }`}
             >
               <span className="text-sm font-semibold text-slate-700">Custom</span>
             </button>
           </div>
+
+          {props.controlSource === 'preset' && props.selectedControl && selectedStyleCue ? (
+            <div className="mt-4 border-t border-slate-200 pt-4" aria-live="polite" aria-label="Selected time control">
+              <p className="text-base font-semibold text-slate-950">{describeTimeControl(props.selectedControl)}</p>
+              <p className="mt-1 text-sm text-slate-600">{selectedStyleCue}</p>
+            </div>
+          ) : null}
 
           {props.controlSource === 'custom' ? (
             <div className="mt-3 animate-fade-in rounded-2xl border border-slate-200 bg-white p-4 shadow-sm" aria-label="Custom time control">
@@ -166,29 +190,6 @@ export function SetupScreen(props: SetupScreenProps) {
                   ) : null}
                 </div>
 
-                <div>
-                  <label htmlFor="delay-seconds" className="block text-sm font-medium text-slate-700">
-                    Delay seconds
-                  </label>
-                  <input
-                    id="delay-seconds"
-                    type="number"
-                    min={0}
-                    step={1}
-                    inputMode="decimal"
-                    value={props.customDelaySeconds}
-                    onChange={(event) => props.onCustomDelaySecondsChange(event.target.value)}
-                    onBlur={props.onCustomDelayBlur}
-                    aria-invalid={Boolean(props.showCustomDelayError)}
-                    aria-describedby={props.showCustomDelayError ? 'delay-seconds-error' : undefined}
-                    className="mt-1 h-11 w-full rounded-md border border-slate-300 px-3 text-slate-900 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
-                  />
-                  {props.showCustomDelayError ? (
-                    <p id="delay-seconds-error" className="mt-1 text-sm text-red-600">
-                      {props.showCustomDelayError}
-                    </p>
-                  ) : null}
-                </div>
               </div>
             </div>
           ) : null}
@@ -196,18 +197,13 @@ export function SetupScreen(props: SetupScreenProps) {
 
         <div className="mt-auto pt-8">
           <Button
-            className="h-14 w-full text-lg font-semibold"
+            className="h-14 w-full text-lg font-semibold shadow-sm"
             onPress={props.onStart}
             isDisabled={!props.canStart}
             aria-label={props.selectedControl ? `Start game with ${props.selectedControl.label}` : 'Start game'}
           >
             Start
           </Button>
-          {(props.attemptedStart || props.controlSource === 'custom') && props.startError ? (
-            <p className="mt-2 text-sm text-red-600" role="alert">
-              {props.startError}
-            </p>
-          ) : null}
         </div>
       </div>
       {props.settingsDrawer}

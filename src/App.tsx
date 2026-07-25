@@ -25,7 +25,6 @@ const getControlEventProperties = (control: TimeControl | null) => {
   return {
     base_minutes: control.baseMinutes,
     increment_seconds: control.incrementSeconds,
-    delay_seconds: control.delaySeconds,
   }
 }
 
@@ -35,13 +34,11 @@ function App() {
   const selectedPreset = useAppStore((state) => state.selectedPreset)
   const customBaseMinutes = useAppStore((state) => state.customBaseMinutes)
   const customIncrementSeconds = useAppStore((state) => state.customIncrementSeconds)
-  const customDelaySeconds = useAppStore((state) => state.customDelaySeconds)
   const touched = useAppStore((state) => state.touched)
   const attemptedStart = useAppStore((state) => state.attemptedStart)
   const startedControl = useAppStore((state) => state.startedControl)
   const activeSide = useAppStore((state) => state.activeSide)
   const remainingMs = useAppStore((state) => state.remainingMs)
-  const activeDelayRemainingMs = useAppStore((state) => state.activeDelayRemainingMs)
   const isPaused = useAppStore((state) => state.isPaused)
   const timeoutSide = useAppStore((state) => state.timeoutSide)
   const undoHistory = useAppStore((state) => state.undoHistory)
@@ -52,7 +49,6 @@ function App() {
   const setSelectedPreset = useAppStore((state) => state.setSelectedPreset)
   const setCustomBaseMinutes = useAppStore((state) => state.setCustomBaseMinutes)
   const setCustomIncrementSeconds = useAppStore((state) => state.setCustomIncrementSeconds)
-  const setCustomDelaySeconds = useAppStore((state) => state.setCustomDelaySeconds)
   const setTouched = useAppStore((state) => state.setTouched)
   const setAttemptedStart = useAppStore((state) => state.setAttemptedStart)
   const startGame = useAppStore((state) => state.startGame)
@@ -90,25 +86,16 @@ function App() {
     return null
   }, [customIncrementSeconds])
 
-  const customDelayError = useMemo(() => {
-    const value = customDelaySeconds.trim()
-    if (!value) return 'Delay seconds is required.'
-    const parsed = parseNumber(value)
-    if (Number.isNaN(parsed) || parsed < 0) return 'Delay seconds must be 0 or greater.'
-    return null
-  }, [customDelaySeconds])
-
   const customControl = useMemo<TimeControl | null>(() => {
-    if (customBaseError || customIncrementError || customDelayError) return null
+    if (customBaseError || customIncrementError) return null
 
     return {
       label: `${customBaseMinutes}+${customIncrementSeconds}`,
       baseMinutes: parseNumber(customBaseMinutes),
       incrementSeconds: parseNumber(customIncrementSeconds),
-      delaySeconds: parseNumber(customDelaySeconds),
       source: 'custom',
     }
-  }, [customBaseError, customBaseMinutes, customDelayError, customDelaySeconds, customIncrementError, customIncrementSeconds])
+  }, [customBaseError, customBaseMinutes, customIncrementError, customIncrementSeconds])
 
   const selectedControl = useMemo<TimeControl | null>(() => {
     if (controlSource === 'preset') {
@@ -118,7 +105,6 @@ function App() {
         label: selectedPresetControl.label,
         baseMinutes: selectedPresetControl.baseMinutes,
         incrementSeconds: selectedPresetControl.incrementSeconds,
-        delaySeconds: selectedPresetControl.delaySeconds,
         source: 'preset',
       }
     }
@@ -147,9 +133,8 @@ function App() {
       presetId: selectedPreset,
       customBaseMinutes,
       customIncrementSeconds,
-      customDelaySeconds,
     }),
-    [controlSource, customBaseMinutes, customDelaySeconds, customIncrementSeconds, selectedPreset],
+    [controlSource, customBaseMinutes, customIncrementSeconds, selectedPreset],
   )
 
   const gameStateSnapshot = useMemo(
@@ -157,13 +142,12 @@ function App() {
       phase,
       activeSide,
       remainingMs,
-      activeDelayRemainingMs,
       isPaused,
       timeoutSide,
       startedControl,
       layoutMode: settings.layoutMode,
     }),
-    [activeDelayRemainingMs, activeSide, isPaused, phase, remainingMs, settings.layoutMode, startedControl, timeoutSide],
+    [activeSide, isPaused, phase, remainingMs, settings.layoutMode, startedControl, timeoutSide],
   )
 
   const degradedModeWarning = useMemo(() => {
@@ -427,7 +411,6 @@ function App() {
           label: selected.label,
           baseMinutes: selected.baseMinutes,
           incrementSeconds: selected.incrementSeconds,
-          delaySeconds: selected.delaySeconds,
           source: 'preset',
         },
         extra: {
@@ -501,7 +484,6 @@ function App() {
   const showCustomBaseError = controlSource === 'custom' && (attemptedStart || touched.base) && customBaseError
   const showCustomIncrementError =
     controlSource === 'custom' && (attemptedStart || touched.increment) && customIncrementError
-  const showCustomDelayError = controlSource === 'custom' && (attemptedStart || touched.delay) && customDelayError
 
   if (phase === 'started' && startedControl) {
     return (
@@ -515,7 +497,6 @@ function App() {
         startedControl={startedControl}
         activeSide={activeSide}
         remainingMs={remainingMs}
-        activeDelayRemainingMs={activeDelayRemainingMs}
         timeoutSide={timeoutSide}
         isPaused={isPaused}
         canUndo={canUndo}
@@ -541,10 +522,8 @@ function App() {
       selectedPreset={selectedPreset}
       customBaseMinutes={customBaseMinutes}
       customIncrementSeconds={customIncrementSeconds}
-      customDelaySeconds={customDelaySeconds}
       showCustomBaseError={showCustomBaseError}
       showCustomIncrementError={showCustomIncrementError}
-      showCustomDelayError={showCustomDelayError}
       selectedControl={selectedControl}
       startError={startError}
       attemptedStart={attemptedStart}
@@ -553,10 +532,8 @@ function App() {
       onPresetSelect={handlePresetSelect}
       onCustomBaseMinutesChange={setCustomBaseMinutes}
       onCustomIncrementSecondsChange={setCustomIncrementSeconds}
-      onCustomDelaySecondsChange={setCustomDelaySeconds}
       onCustomBaseBlur={() => setTouched({ base: true })}
       onCustomIncrementBlur={() => setTouched({ increment: true })}
-      onCustomDelayBlur={() => setTouched({ delay: true })}
       onStart={handleStart}
     />
   )

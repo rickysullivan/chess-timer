@@ -1,4 +1,4 @@
-import { RotateCcw, Undo2 } from 'lucide-react'
+import { CornerDownLeft, RotateCcw } from 'lucide-react'
 import { useCallback, useEffect, useState, type ReactNode } from 'react'
 import { AlertDialog, Button } from '@heroui/react'
 import { formatMs, type ActionMessageTone, type AppSettings, type Side, type TimeControl } from '@/app/types'
@@ -13,7 +13,6 @@ type GameScreenProps = {
   startedControl: TimeControl
   activeSide: Side
   remainingMs: Record<Side, number>
-  activeDelayRemainingMs: number
   timeoutSide: Side | null
   isPaused: boolean
   canUndo: boolean
@@ -140,16 +139,6 @@ export function GameScreen(props: GameScreenProps) {
               </p>
             </div>
           ) : null}
-          {props.activeDelayRemainingMs > 0 && !props.isPaused && !props.timeoutSide ? (
-            <p
-              id="game-delay-indicator"
-              className="mt-0.5 text-xs font-medium uppercase tracking-[0.12em] text-slate-500"
-              aria-live="polite"
-            >
-              Delay: {(props.activeDelayRemainingMs / 1000).toFixed(1)}s
-            </p>
-          ) : null}
-
           {props.isPaused && !isEnded ? (
             <div className="mt-3 flex flex-1 flex-col gap-3 animate-fade-in" aria-live="polite">
               <div
@@ -197,7 +186,7 @@ export function GameScreen(props: GameScreenProps) {
                 </div>
               </div>
               <Button
-                className="w-full"
+                className="w-full shadow-sm"
                 onPress={props.onPauseResume}
                 aria-label={`Resume game with ${props.activeSide} to move`}
               >
@@ -276,7 +265,7 @@ export function GameScreen(props: GameScreenProps) {
                   variant="danger-soft"
                   onPress={handleReset}
                   aria-label="Reset game to initial time control"
-                  className="flex-1"
+                  className="flex-1 shadow-sm"
                 >
                   <RotateCcw className="mr-2 size-4" />
                   Reset
@@ -459,16 +448,16 @@ export function GameScreen(props: GameScreenProps) {
                 onPress={props.onUndo}
                 isDisabled={!props.canUndo}
                 aria-label="Undo last turn switch"
-                className="w-full"
+                className="w-full border-slate-200 bg-white text-slate-800 shadow-sm hover:bg-slate-50"
               >
-                <Undo2 className="mr-2 size-4" />
+                <CornerDownLeft className="mr-2 size-4" />
                 Undo
               </Button>
               <Button
                 variant="outline"
                 onPress={handleReset}
                 aria-label="Reset game to initial time control"
-                className="w-full"
+                className="w-full border-slate-200 bg-white text-slate-800 shadow-sm hover:bg-slate-50"
               >
                 <RotateCcw className="mr-2 size-4" />
                 Reset
@@ -479,10 +468,10 @@ export function GameScreen(props: GameScreenProps) {
           {!isEnded ? (
             <div id="game-back-to-setup" className="pt-4">
               <Button
-                variant="ghost"
+                variant="outline"
                 onPress={props.onBackToSetup}
                 aria-label="Return to setup screen"
-                className="w-full"
+                className="w-full border-slate-200 bg-slate-100 text-slate-700 hover:bg-slate-200 hover:text-slate-900"
               >
                 Back to Setup
               </Button>

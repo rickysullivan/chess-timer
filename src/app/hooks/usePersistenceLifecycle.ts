@@ -11,13 +11,11 @@ type UsePersistenceLifecycleOptions = {
     presetId: string
     customBaseMinutes: string
     customIncrementSeconds: string
-    customDelaySeconds: string
   }
   gameStateSnapshot: {
     phase: 'setup' | 'started'
     activeSide: Side
     remainingMs: Record<Side, number>
-    activeDelayRemainingMs: number
     isPaused: boolean
     timeoutSide: Side | null
     startedControl: TimeControl | null

@@ -1,17 +1,16 @@
 export const PRESETS = [
-  { id: '1+0', label: '1+0', description: 'Bullet', baseMinutes: 1, incrementSeconds: 0, delaySeconds: 0 },
-  { id: '3+2', label: '3+2', description: 'Blitz', baseMinutes: 3, incrementSeconds: 2, delaySeconds: 0 },
-  { id: '5+0', label: '5+0', description: 'Blitz', baseMinutes: 5, incrementSeconds: 0, delaySeconds: 0 },
-  { id: '10+0', label: '10+0', description: 'Rapid', baseMinutes: 10, incrementSeconds: 0, delaySeconds: 0 },
+  { id: '1+0', label: '1+0', description: 'Bullet', baseMinutes: 1, incrementSeconds: 0 },
+  { id: '3+2', label: '3+2', description: 'Blitz', baseMinutes: 3, incrementSeconds: 2 },
+  { id: '5+0', label: '5+0', description: 'Blitz', baseMinutes: 5, incrementSeconds: 0 },
+  { id: '10+0', label: '10+0', description: 'Rapid', baseMinutes: 10, incrementSeconds: 0 },
   {
     id: '15+10',
     label: '15+10',
     description: 'Rapid +',
     baseMinutes: 15,
     incrementSeconds: 10,
-    delaySeconds: 0,
   },
-  { id: '30+0', label: '30+0', description: 'Classical', baseMinutes: 30, incrementSeconds: 0, delaySeconds: 0 },
+  { id: '30+0', label: '30+0', description: 'Classical', baseMinutes: 30, incrementSeconds: 0 },
 ] as const
 
 export type ControlSource = 'preset' | 'custom'
@@ -22,7 +21,6 @@ export type TimeControl = {
   label: string
   baseMinutes: number
   incrementSeconds: number
-  delaySeconds: number
   source: ControlSource
 }
 
@@ -40,7 +38,6 @@ export type LastUsedControl = {
   presetId: string
   customBaseMinutes: string
   customIncrementSeconds: string
-  customDelaySeconds: string
 }
 
 export type ActionMessageTone = 'success' | 'error' | 'info'
@@ -48,7 +45,6 @@ export type ActionMessageTone = 'success' | 'error' | 'info'
 export type TurnSnapshot = {
   activeSide: Side
   remainingMs: Record<Side, number>
-  activeDelayRemainingMs: number
   isPaused: boolean
   timeoutSide: Side | null
 }
@@ -75,7 +71,6 @@ export const DEFAULT_LAST_USED_CONTROL: LastUsedControl = {
   presetId: PRESETS[0].id,
   customBaseMinutes: '',
   customIncrementSeconds: '0',
-  customDelaySeconds: '0',
 }
 
 export const formatMs = (value: number) => {

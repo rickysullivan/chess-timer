@@ -15,7 +15,6 @@ import {
 type SetupTouched = {
   base: boolean
   increment: boolean
-  delay: boolean
 }
 
 type AppStore = {
@@ -24,13 +23,11 @@ type AppStore = {
   selectedPreset: string
   customBaseMinutes: string
   customIncrementSeconds: string
-  customDelaySeconds: string
   touched: SetupTouched
   attemptedStart: boolean
   startedControl: TimeControl | null
   activeSide: Side
   remainingMs: Record<Side, number>
-  activeDelayRemainingMs: number
   isPaused: boolean
   timeoutSide: Side | null
   undoHistory: TurnSnapshot[]
@@ -40,7 +37,6 @@ type AppStore = {
   setSelectedPreset: (presetId: string) => void
   setCustomBaseMinutes: (value: string) => void
   setCustomIncrementSeconds: (value: string) => void
-  setCustomDelaySeconds: (value: string) => void
   setTouched: (next: Partial<SetupTouched>) => void
   setAttemptedStart: (value: boolean) => void
   startGame: (control: TimeControl) => void
@@ -64,7 +60,6 @@ type PersistedGameState = {
   remainingMs: Record<Side, number>
   isPaused: boolean
   timeoutSide: Side | null
-  activeDelayRemainingMs: number
   startedControl: TimeControl
   layoutMode: AppSettings['layoutMode']
   last_updated: number
@@ -111,7 +106,6 @@ const getPersistedLastUsedControl = (): LastUsedControl => {
     presetId: hasPreset ? persistedPresetId : fallbackPresetId,
     customBaseMinutes: persisted.customBaseMinutes ?? DEFAULT_LAST_USED_CONTROL.customBaseMinutes,
     customIncrementSeconds: persisted.customIncrementSeconds ?? DEFAULT_LAST_USED_CONTROL.customIncrementSeconds,
-    customDelaySeconds: persisted.customDelaySeconds ?? DEFAULT_LAST_USED_CONTROL.customDelaySeconds,
   }
 }
 
@@ -132,9 +126,6 @@ const isTimeControl = (value: unknown): value is TimeControl => {
     typeof candidate.incrementSeconds === 'number' &&
     Number.isFinite(candidate.incrementSeconds) &&
     candidate.incrementSeconds >= 0 &&
-    typeof candidate.delaySeconds === 'number' &&
-    Number.isFinite(candidate.delaySeconds) &&
-    candidate.delaySeconds >= 0 &&
     (candidate.source === 'preset' || candidate.source === 'custom')
   )
 }
@@ -149,7 +140,6 @@ const asPersistedGameState = (value: unknown): PersistedGameState | null => {
   if (typeof candidate.remainingMs.White !== 'number' || typeof candidate.remainingMs.Black !== 'number') return null
   if (typeof candidate.isPaused !== 'boolean') return null
   if (candidate.timeoutSide !== null && candidate.timeoutSide !== 'White' && candidate.timeoutSide !== 'Black') return null
-  if (typeof candidate.activeDelayRemainingMs !== 'number') return null
   if (!isTimeControl(candidate.startedControl)) return null
   if (candidate.layoutMode !== 'adaptive' && candidate.layoutMode !== 'classic') return null
   if (typeof candidate.last_updated !== 'number' || !Number.isFinite(candidate.last_updated)) return null
@@ -163,7 +153,6 @@ const asPersistedGameState = (value: unknown): PersistedGameState | null => {
     },
     isPaused: candidate.isPaused,
     timeoutSide: candidate.timeoutSide,
-    activeDelayRemainingMs: sanitizeMs(candidate.activeDelayRemainingMs),
     startedControl: candidate.startedControl,
     layoutMode: candidate.layoutMode,
     last_updated: sanitizeMs(candidate.last_updated),
@@ -173,11 +162,6 @@ const asPersistedGameState = (value: unknown): PersistedGameState | null => {
 const otherSide = (side: Side): Side => (side === 'White' ? 'Black' : 'White')
 
 const sanitizeMs = (value: number) => Math.max(0, Math.round(value))
-
-const getDelayMs = (control: TimeControl | null) => {
-  if (!control) return 0
-  return sanitizeMs(control.delaySeconds * 1000)
-}
 
 const getIncrementMs = (control: TimeControl | null) => {
   if (!control) return 0
@@ -193,13 +177,11 @@ export const useAppStore = create<AppStore>((set, get) => {
     selectedPreset: persistedControl.presetId,
     customBaseMinutes: persistedControl.customBaseMinutes,
     customIncrementSeconds: persistedControl.customIncrementSeconds,
-    customDelaySeconds: persistedControl.customDelaySeconds,
-    touched: { base: false, increment: false, delay: false },
+    touched: { base: false, increment: false },
     attemptedStart: false,
     startedControl: null,
     activeSide: 'White',
     remainingMs: { White: 0, Black: 0 },
-    activeDelayRemainingMs: 0,
     isPaused: false,
     timeoutSide: null,
     undoHistory: [],
@@ -209,18 +191,15 @@ export const useAppStore = create<AppStore>((set, get) => {
     setSelectedPreset: (presetId) => set({ selectedPreset: presetId }),
     setCustomBaseMinutes: (value) => set({ customBaseMinutes: value }),
     setCustomIncrementSeconds: (value) => set({ customIncrementSeconds: value }),
-    setCustomDelaySeconds: (value) => set({ customDelaySeconds: value }),
     setTouched: (next) => set((state) => ({ touched: { ...state.touched, ...next } })),
     setAttemptedStart: (value) => set({ attemptedStart: value }),
     startGame: (control) => {
       const baseMs = sanitizeMs(control.baseMinutes * 60 * 1000)
-      const delayMs = getDelayMs(control)
       set({
         phase: 'started',
         startedControl: control,
         activeSide: 'White',
         remainingMs: { White: baseMs, Black: baseMs },
-        activeDelayRemainingMs: delayMs,
         undoHistory: [],
         timeoutSide: null,
         isPaused: false,
@@ -236,30 +215,19 @@ export const useAppStore = create<AppStore>((set, get) => {
         if (elapsed <= 0) return state
 
         const side = state.activeSide
-        let remainingDelayMs = state.activeDelayRemainingMs
-        let consumeFromClockMs = elapsed
-
-        if (remainingDelayMs > 0) {
-          const delayConsumed = Math.min(remainingDelayMs, consumeFromClockMs)
-          remainingDelayMs -= delayConsumed
-          consumeFromClockMs -= delayConsumed
-        }
-
         const currentRemainingMs = state.remainingMs[side]
-        const nextRemainingMs = Math.max(0, currentRemainingMs - consumeFromClockMs)
+        const nextRemainingMs = Math.max(0, currentRemainingMs - elapsed)
         const didClockChange = nextRemainingMs !== currentRemainingMs
-        const didDelayChange = remainingDelayMs !== state.activeDelayRemainingMs
 
-        if (!didClockChange && !didDelayChange) {
+        if (!didClockChange) {
           return state
         }
 
         const nextState: Partial<AppStore> = {
-          activeDelayRemainingMs: remainingDelayMs,
           remainingMs: didClockChange ? { ...state.remainingMs, [side]: nextRemainingMs } : state.remainingMs,
         }
 
-        if (nextRemainingMs <= 0 && remainingDelayMs <= 0) {
+        if (nextRemainingMs <= 0) {
           nextState.timeoutSide = side
           nextState.isPaused = true
         }
@@ -279,7 +247,6 @@ export const useAppStore = create<AppStore>((set, get) => {
           White: state.remainingMs.White,
           Black: state.remainingMs.Black,
         },
-        activeDelayRemainingMs: state.activeDelayRemainingMs,
         isPaused: state.isPaused,
         timeoutSide: state.timeoutSide,
       }
@@ -294,7 +261,6 @@ export const useAppStore = create<AppStore>((set, get) => {
         undoHistory: [...state.undoHistory, snapshot],
         activeSide: toSide,
         remainingMs: nextRemainingMs,
-        activeDelayRemainingMs: getDelayMs(state.startedControl),
       })
 
       return { fromSide, toSide }
@@ -321,7 +287,6 @@ export const useAppStore = create<AppStore>((set, get) => {
         undoHistory: state.undoHistory.slice(0, -1),
         activeSide: snapshot.activeSide,
         remainingMs: snapshot.remainingMs,
-        activeDelayRemainingMs: snapshot.activeDelayRemainingMs,
         isPaused: snapshot.isPaused,
         timeoutSide: snapshot.timeoutSide,
       })
@@ -336,7 +301,6 @@ export const useAppStore = create<AppStore>((set, get) => {
       set({
         remainingMs: { White: baseMs, Black: baseMs },
         activeSide: 'White',
-        activeDelayRemainingMs: getDelayMs(state.startedControl),
         undoHistory: [],
         timeoutSide: null,
         isPaused: false,
@@ -364,7 +328,6 @@ export const useAppStore = create<AppStore>((set, get) => {
           },
           isPaused: state.isPaused,
           timeoutSide: state.timeoutSide,
-          activeDelayRemainingMs: sanitizeMs(state.activeDelayRemainingMs),
           startedControl: state.startedControl,
           layoutMode: state.settings.layoutMode,
           last_updated: Date.now(),
@@ -398,7 +361,6 @@ export const useAppStore = create<AppStore>((set, get) => {
         startedControl: persisted.startedControl,
         activeSide: persisted.activeSide,
         remainingMs: persisted.remainingMs,
-        activeDelayRemainingMs: persisted.activeDelayRemainingMs,
         isPaused: persisted.isPaused,
         timeoutSide: persisted.timeoutSide,
         undoHistory: [],
