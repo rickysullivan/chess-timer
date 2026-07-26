@@ -2,10 +2,12 @@
   "name": "chess-timer",
   "private": true,
   "version": "0.0.0",
+  "packageManager": "pnpm@10.13.1",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "deploy:cloudflare": "pnpm run build && CLOUDFLARE_ACCOUNT_ID=${CLOUDFLARE_ACCOUNT_ID:-65857499702e3ec889a4f5cbd050ec01} pnpm dlx wrangler pages deploy dist --project-name=plychss --branch=main",
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest",

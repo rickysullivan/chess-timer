@@ -2,7 +2,7 @@ export const PRESETS = [
   { id: '1+0', label: '1+0', description: 'Bullet', baseMinutes: 1, incrementSeconds: 0 },
   { id: '3+2', label: '3+2', description: 'Blitz', baseMinutes: 3, incrementSeconds: 2 },
   { id: '5+0', label: '5+0', description: 'Blitz', baseMinutes: 5, incrementSeconds: 0 },
-  { id: '10+0', label: '10+0', description: 'Rapid', baseMinutes: 10, incrementSeconds: 0 },
+  { id: '10+0', label: '10+0', description: 'Blitz', baseMinutes: 10, incrementSeconds: 0 },
   {
     id: '15+10',
     label: '15+10',
@@ -10,7 +10,8 @@ export const PRESETS = [
     baseMinutes: 15,
     incrementSeconds: 10,
   },
-  { id: '30+0', label: '30+0', description: 'Classical', baseMinutes: 30, incrementSeconds: 0 },
+  { id: '30+0', label: '30+0', description: 'Rapid', baseMinutes: 30, incrementSeconds: 0 },
+  { id: '90+30', label: '90+30', description: 'Classical', baseMinutes: 90, incrementSeconds: 30 },
 ] as const
 
 export type ControlSource = 'preset' | 'custom'

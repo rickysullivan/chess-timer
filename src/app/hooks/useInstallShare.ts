@@ -114,7 +114,7 @@ export function useInstallShare(options: UseInstallShareOptions) {
     if (typeof navigator.share === 'function') {
       try {
         await navigator.share({
-          title: 'Zugzwang',
+          title: 'PlyChss',
           text: 'Use this simple chess timer for your next game.',
           url: currentUrl,
         })

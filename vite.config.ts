@@ -14,10 +14,10 @@ export default defineConfig({
     tailwindcss(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['icons/zugzwang-mark.svg', 'icons/apple-touch-icon.png'],
+      includeAssets: ['icons/plychss-mark.svg', 'icons/apple-touch-icon.png'],
       manifest: {
-        name: 'Zugzwang',
-        short_name: 'Zugzwang',
+        name: 'PlyChss',
+        short_name: 'PlyChss',
         description: 'A modern chess timer web app',
         start_url: '/',
         display: 'standalone',

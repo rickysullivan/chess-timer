@@ -70,12 +70,12 @@ export function GameScreen(props: GameScreenProps) {
           <div className="flex items-center justify-between gap-2">
             <div id="game-brand" className="flex items-center gap-2.5">
               <img
-                src="/icons/zugzwang-mark.svg"
+                src="/icons/plychss-mark.svg"
                 alt=""
                 aria-hidden="true"
                 className="size-8 rounded-lg shadow-sm"
               />
-              <p className="text-base font-bold tracking-tight text-slate-950">Zugzwang</p>
+              <p className="text-base font-bold tracking-tight text-slate-950">PlyChss</p>
               <span className="rounded-full bg-white px-2.5 py-1 text-[11px] font-medium text-slate-600 ring-1 ring-slate-200 sm:text-xs">
                 {props.startedControl.label}
               </span>
