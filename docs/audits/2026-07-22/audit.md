@@ -1,4 +1,4 @@
-# Zugzwang product audit — 2026-07-22
+# PlyChss product audit — 2026-07-22
 
 Scope: first-use setup, starting a 1+0 game, passing the turn, opening settings, and opening custom time controls in the running local app.
 
@@ -43,4 +43,3 @@ The main path is compact and understandable, with strong contrast between the ac
 ## Evidence limits
 
 Screenshots cannot establish actual hit-target dimensions, keyboard order, focus visibility, screen-reader announcements, color contrast ratios, timer accuracy under backgrounding, vibration/sound behavior, persistence, or behavior at other viewport sizes. Those require interaction, device, and automated accessibility testing.
-

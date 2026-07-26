@@ -56,12 +56,12 @@ export function SetupScreen(props: SetupScreenProps) {
         <div className="mb-6 flex items-center justify-between gap-2">
           <div className="flex items-center gap-2.5">
             <img
-              src="/icons/zugzwang-mark.svg"
+              src="/icons/plychss-mark.svg"
               alt=""
               aria-hidden="true"
               className="size-8 rounded-lg shadow-sm"
             />
-            <p className="text-base font-bold tracking-tight text-slate-950">Zugzwang</p>
+            <p className="text-base font-bold tracking-tight text-slate-950">PlyChss</p>
           </div>
           {props.headerActions}
         </div>
