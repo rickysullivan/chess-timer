@@ -1,12 +1,11 @@
 import { beforeEach, describe, expect, it } from 'vitest'
-import { DEFAULT_SETTINGS, STORAGE_KEYS, type TimeControl } from '@/app/types'
+import { DEFAULT_SETTINGS, PRESETS, STORAGE_KEYS, type TimeControl } from '@/app/types'
 import { useAppStore } from '@/app/store'
 
 const TEST_CONTROL: TimeControl = {
   label: '1+2',
   baseMinutes: 1,
   incrementSeconds: 2,
-  delaySeconds: 3,
   source: 'custom',
 }
 
@@ -17,13 +16,11 @@ function resetStore() {
     selectedPreset: '1+0',
     customBaseMinutes: '',
     customIncrementSeconds: '0',
-    customDelaySeconds: '0',
-    touched: { base: false, increment: false, delay: false },
+    touched: { base: false, increment: false },
     attemptedStart: false,
     startedControl: null,
     activeSide: 'White',
     remainingMs: { White: 0, Black: 0 },
-    activeDelayRemainingMs: 0,
     isPaused: false,
     timeoutSide: null,
     undoHistory: [],
@@ -38,13 +35,12 @@ describe('app store gameplay timing', () => {
     resetStore()
   })
 
-  it('applies increment to side that just moved and sets next-turn delay', () => {
+  it('applies increment to side that just moved', () => {
     const store = useAppStore.getState()
     store.startGame(TEST_CONTROL)
 
     useAppStore.setState({
       remainingMs: { White: 45_000, Black: 50_000 },
-      activeDelayRemainingMs: 0,
       activeSide: 'White',
     })
 
@@ -55,30 +51,20 @@ describe('app store gameplay timing', () => {
     expect(after.activeSide).toBe('Black')
     expect(after.remainingMs.White).toBe(47_000)
     expect(after.remainingMs.Black).toBe(50_000)
-    expect(after.activeDelayRemainingMs).toBe(3_000)
     expect(after.undoHistory.length).toBe(1)
   })
 
-  it('consumes delay before decrementing active clock', () => {
+  it('decrements the active clock directly', () => {
     useAppStore.getState().startGame(TEST_CONTROL)
 
     useAppStore.getState().tickActiveClock(1_000)
-    let state = useAppStore.getState()
-
-    expect(state.activeDelayRemainingMs).toBe(2_000)
-    expect(state.remainingMs.White).toBe(60_000)
-
-    useAppStore.getState().tickActiveClock(2_500)
-    state = useAppStore.getState()
-
-    expect(state.activeDelayRemainingMs).toBe(0)
-    expect(state.remainingMs.White).toBe(59_500)
+    expect(useAppStore.getState().remainingMs.White).toBe(59_000)
   })
 
   it('undo restores previous snapshot', () => {
     const store = useAppStore.getState()
     store.startGame(TEST_CONTROL)
-    useAppStore.setState({ remainingMs: { White: 30_000, Black: 55_000 }, activeDelayRemainingMs: 0 })
+    useAppStore.setState({ remainingMs: { White: 30_000, Black: 55_000 } })
 
     useAppStore.getState().passTurn()
     const undone = useAppStore.getState().undoTurn()
@@ -87,13 +73,12 @@ describe('app store gameplay timing', () => {
     expect(undone).toBe(true)
     expect(after.activeSide).toBe('White')
     expect(after.remainingMs).toEqual({ White: 30_000, Black: 55_000 })
-    expect(after.activeDelayRemainingMs).toBe(0)
   })
 
   it('times out active side and pauses', () => {
     const store = useAppStore.getState()
     store.startGame(TEST_CONTROL)
-    useAppStore.setState({ remainingMs: { White: 300, Black: 10_000 }, activeDelayRemainingMs: 0 })
+    useAppStore.setState({ remainingMs: { White: 300, Black: 10_000 } })
 
     useAppStore.getState().tickActiveClock(500)
     const after = useAppStore.getState()
@@ -113,7 +98,6 @@ describe('app store gameplay timing', () => {
         {
           activeSide: 'White',
           remainingMs: { White: 10_000, Black: 5_000 },
-          activeDelayRemainingMs: 0,
           isPaused: false,
           timeoutSide: null,
         },
@@ -127,6 +111,20 @@ describe('app store gameplay timing', () => {
     expect(after.remainingMs).toEqual({ White: 60_000, Black: 60_000 })
     expect(after.undoHistory).toHaveLength(0)
     expect(after.timeoutSide).toBeNull()
+  })
+})
+
+describe('time-control presets', () => {
+  it('uses standard chess speed labels for the presets', () => {
+    expect(PRESETS.map(({ id, description }) => [id, description])).toEqual([
+      ['1+0', 'Bullet'],
+      ['3+2', 'Blitz'],
+      ['5+0', 'Blitz'],
+      ['10+0', 'Blitz'],
+      ['15+10', 'Rapid +'],
+      ['30+0', 'Rapid'],
+      ['90+30', 'Classical'],
+    ])
   })
 })
 
@@ -146,7 +144,6 @@ describe('persisted game-state restore', () => {
         remainingMs: { White: 20_000, Black: 30_000 },
         isPaused: true,
         timeoutSide: null,
-        activeDelayRemainingMs: 1_000,
         startedControl: TEST_CONTROL,
         layoutMode: 'classic',
         last_updated: now,
@@ -173,7 +170,6 @@ describe('persisted game-state restore', () => {
         remainingMs: { White: 10_000, Black: 10_000 },
         isPaused: false,
         timeoutSide: null,
-        activeDelayRemainingMs: 0,
         startedControl: TEST_CONTROL,
         layoutMode: 'adaptive',
         last_updated: stale,

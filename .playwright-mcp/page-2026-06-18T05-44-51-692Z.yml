@@ -1,0 +1,33 @@
+- main [ref=e3]:
+  - generic [ref=e4]:
+    - generic [ref=e5]:
+      - generic [ref=e6]:
+        - text: chess-timer
+        - generic [ref=e7]: 1+0
+      - generic [ref=e8]:
+        - button "Share app link" [ref=e9]:
+          - img [ref=e10]
+        - button "Open settings" [ref=e16]:
+          - img [ref=e17]
+    - paragraph [ref=e20]: Previous game restored.
+    - generic [ref=e21]:
+      - paragraph [ref=e22]: Black to move
+      - generic [ref=e23]:
+        - button "Black active timer. 00:08. Tap to pass turn." [ref=e24]:
+          - generic [ref=e25]:
+            - paragraph [ref=e26]: Black (active)
+            - paragraph [ref=e27]: 00:08
+            - paragraph [ref=e28]: Tap to pass turn
+        - button "White inactive timer. 00:54. Tap to pause game." [ref=e29]:
+          - paragraph [ref=e30]: White
+          - paragraph [ref=e31]: 00:54
+          - paragraph [ref=e32]: Tap to pause
+    - group "In-game controls" [ref=e33]:
+      - button "Pause game" [ref=e34] [cursor=pointer]: Pause
+      - button "Undo last turn switch" [disabled]:
+        - img
+        - text: Undo
+      - button "Reset game to initial time control" [ref=e35] [cursor=pointer]:
+        - img
+        - text: Reset
+    - button "Return to setup screen" [ref=e37] [cursor=pointer]: Back to Setup

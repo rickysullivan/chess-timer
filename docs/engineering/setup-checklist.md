@@ -5,11 +5,11 @@ These tasks are required before user-value stories. They are prerequisites, not 
 ## Required Setup Tasks
 
 1) Initialize project with Vite PWA React TS starter:
-   - `npm create @vite-pwa/pwa@latest chess-timer -- --template react-ts`
+   - `pnpm create @vite-pwa/pwa@latest chess-timer --template react-ts`
 
-2) Configure CI/CD to deploy to Cloudflare Pages:
-   - GitHub Actions workflow builds and deploys on main.
-   - Build-time environment variables injected via CI.
+2) Configure Cloudflare Pages deployment:
+   - Connect the repository and configure the build command as `pnpm run build`.
+   - Set the output directory to `dist` and manage deployment settings in Cloudflare.
 
 3) Document local development environment:
    - `.env.example` includes required PostHog + Sentry keys.

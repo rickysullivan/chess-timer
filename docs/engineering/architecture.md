@@ -70,12 +70,12 @@ Web application (React + TypeScript) with offline-first PWA requirements.
 ### Starter Options Considered
 
 **Option A: Vite React TS (create-vite)**
-- Command: `npm create vite@latest chess-timer -- --template react-ts`
+- Command: `pnpm create vite@latest chess-timer --template react-ts`
 - Pros: minimal baseline, maximum control.
 - Cons: must add PWA config and service worker manually.
 
 **Option B: Vite PWA React TS (create-pwa)**
-- Command: `npm create @vite-pwa/pwa@latest chess-timer -- --template react-ts`
+- Command: `pnpm create @vite-pwa/pwa@latest chess-timer --template react-ts`
 - Pros: PWA scaffolding included (manifest + SW), aligned with offline-first requirement.
 - Cons: still requires shadcn/ui + Tailwind setup.
 
@@ -93,7 +93,7 @@ Web application (React + TypeScript) with offline-first PWA requirements.
 **Initialization Command:**
 
 ```bash
-npm create @vite-pwa/pwa@latest chess-timer -- --template react-ts
+pnpm create @vite-pwa/pwa@latest chess-timer --template react-ts
 ```
 
 **Architectural Decisions Provided by Starter:**
@@ -109,15 +109,15 @@ npm create @vite-pwa/pwa@latest chess-timer -- --template react-ts
 
 **Version Freshness Checks (post-init):**
 - Confirm latest toolchain versions before first commit:
-  - `npm view @vite-pwa/pwa version`
-  - `npm view vite version`
-  - `npm view vite-plugin-pwa version`
-  - `npm view react version`
-  - `npm view typescript version`
-  - `npm view shadcn@latest version`
-  - `npm view tailwindcss version`
-  - `npm view @tailwindcss/vite version`
-- After scaffolding, run `npm outdated` and update any core tooling if needed.
+  - `pnpm view @vite-pwa/pwa version`
+  - `pnpm view vite version`
+  - `pnpm view vite-plugin-pwa version`
+  - `pnpm view react version`
+  - `pnpm view typescript version`
+  - `pnpm view shadcn@latest version`
+  - `pnpm view tailwindcss version`
+  - `pnpm view @tailwindcss/vite version`
+- After scaffolding, run `pnpm outdated` and update any core tooling if needed.
 
 **Note:** Project initialization using this command should be the first implementation story.
 
@@ -132,7 +132,7 @@ npm create @vite-pwa/pwa@latest chess-timer -- --template react-ts
 - State management with Zustand (v5.0.11).
 - Timer updates via requestAnimationFrame with derived display time.
 - Minimal routing with React Router DOM (v7.13.0) for `/` only; settings remain an in-game drawer.
-- Hosting on Cloudflare Pages with GitHub Actions CI/CD.
+- Hosting on Cloudflare Pages with dashboard-managed Git deployment.
 - Analytics via PostHog (posthog-js v1.342.1) and error tracking via Sentry (@sentry/react v10.38.0).
 
 **Important Decisions (Shape Architecture):**
@@ -186,7 +186,7 @@ npm create @vite-pwa/pwa@latest chess-timer -- --template react-ts
 ### Infrastructure & Deployment
 
 - **Hosting:** Cloudflare Pages (static PWA).  
-- **CI/CD:** GitHub Actions deploy to Pages.  
+- **Deployment:** Cloudflare Pages builds and deploys from the connected repository.
 - **Env config:** build-time only (`import.meta.env`).  
 - **Monitoring:** Sentry + PostHog only (no Cloudflare analytics).  
 - **Scaling:** CDN-only for static assets (no backend scaling).  
@@ -204,7 +204,7 @@ npm create @vite-pwa/pwa@latest chess-timer -- --template react-ts
 6. Configure service worker caching strategies.
 7. Add React Router minimal routing (single `/` route; settings drawer overlay).
 8. Integrate PostHog + Sentry with anonymous session ID.
-9. Configure Cloudflare Pages + GitHub Actions pipeline.
+9. Configure the Cloudflare Pages project and connected-repository build settings.
 
 **Cross-Component Dependencies:**
 - Timer engine depends on state machine; view state manager consumes timer state and layout mode.
@@ -305,7 +305,7 @@ npm create @vite-pwa/pwa@latest chess-timer -- --template react-ts
 chess-timer/
 ├── README.md
 ├── package.json
-├── package-lock.json
+├── pnpm-lock.yaml
 ├── components.json                  # shadcn/ui config
 ├── vite.config.ts
 ├── tsconfig.json
@@ -453,7 +453,7 @@ chess-timer/
 
 **Development Server Structure:** Vite dev server serves `src/` + `public/`.  
 **Build Process Structure:** Vite builds static assets; service worker handled by PWA plugin.  
-**Deployment Structure:** GitHub Actions builds and deploys to Cloudflare Pages.
+**Deployment Structure:** Cloudflare Pages builds and deploys from the connected repository.
 
 ## Architecture Validation Results
 
@@ -461,7 +461,7 @@ chess-timer/
 
 **Decision Compatibility:**
 - Vite PWA + React TS + Zustand + Zod + PostHog/Sentry remain compatible and aligned with client-only PWA delivery.
-- Cloudflare Pages + GitHub Actions fits the static deployment model.
+- Cloudflare Pages Git deployment fits the static deployment model.
 - React Router v7 is appropriate for minimal routing needs.
 
 **Pattern Consistency:**

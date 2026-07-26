@@ -1,0 +1,65 @@
+- generic [ref=e1]:
+  - main [ref=e64]:
+    - generic [ref=e65]:
+      - generic [ref=e66]:
+        - generic [ref=e67]:
+          - text: chess-timer
+          - generic [ref=e68]: 1+0
+        - generic [ref=e69]:
+          - button "Share app link" [ref=e70]:
+            - img [ref=e71]
+            - text: Share
+          - button "Open settings" [expanded] [ref=e77]:
+            - img [ref=e78]
+            - text: Settings
+      - paragraph [ref=e81]: Game resumed.
+      - generic [ref=e85]:
+        - paragraph [ref=e86]: White to move
+        - generic [ref=e87]:
+          - button "White active timer. 00:20. Tap to pass turn." [ref=e118]:
+            - paragraph [ref=e89]: White (active)
+            - paragraph [ref=e90]: 00:20
+            - paragraph [ref=e91]: Tap to pass turn
+          - button "Black inactive timer. 01:00. Tap to pause game." [ref=e92]:
+            - paragraph [ref=e93]: Black
+            - paragraph [ref=e94]:
+              - generic [ref=e95]: 01:00
+            - paragraph [ref=e96]: Tap to pause
+      - group "In-game controls" [ref=e97]:
+        - button "Pause game" [ref=e98] [cursor=pointer]: Pause
+        - button "Undo last turn switch" [disabled]:
+          - img
+          - text: Undo
+        - button "Reset game to initial time control" [ref=e99] [cursor=pointer]:
+          - img
+          - text: Reset
+      - button "Return to setup screen" [ref=e101] [cursor=pointer]: Back to Setup
+  - generic [ref=e119]:
+    - generic:
+      - generic:
+        - button "Dismiss"
+      - dialog "Settings" [active] [ref=e120]:
+        - button "Close" [ref=e123] [cursor=pointer]:
+          - img
+        - heading "Settings" [level=2] [ref=e125]
+        - generic [ref=e127]:
+          - generic [ref=e129] [cursor=pointer]:
+            - switch "Sound" [checked] [ref=e131]
+            - text: Sound
+          - generic [ref=e135] [cursor=pointer]:
+            - switch "Vibration" [checked] [ref=e137]
+            - text: Vibration
+          - generic [ref=e141] [cursor=pointer]:
+            - switch "Keep screen awake" [ref=e143]
+            - text: Keep screen awake
+          - generic [ref=e147] [cursor=pointer]:
+            - switch "High-contrast mode" [ref=e149]
+            - text: High-contrast mode
+          - generic [ref=e153] [cursor=pointer]:
+            - switch "Large digits mode" [ref=e155]
+            - text: Large digits mode
+          - generic [ref=e158]:
+            - paragraph [ref=e159]: Layout mode
+            - group "Layout mode" [ref=e160]:
+              - button "Adaptive" [pressed] [ref=e161]
+              - button "Classic" [ref=e162]

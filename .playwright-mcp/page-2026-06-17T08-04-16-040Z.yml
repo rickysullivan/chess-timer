@@ -1,0 +1,62 @@
+- main [ref=e185]:
+  - generic [ref=e186]:
+    - generic [ref=e187]:
+      - generic [ref=e188]:
+        - img [ref=e189]
+        - text: chess-timer
+      - generic [ref=e192]:
+        - button "Share app link" [ref=e193] [cursor=pointer]:
+          - img [ref=e194]
+          - text: Share
+        - button "Open settings" [ref=e200] [cursor=pointer]:
+          - img [ref=e201]
+          - text: Settings
+    - paragraph [ref=e204]
+    - heading "Pick a preset and start in seconds." [level=1] [ref=e205]
+    - paragraph [ref=e206]: Clean, focused, and built for fast over-the-board play.
+    - generic [ref=e207]:
+      - heading "Control type" [level=2] [ref=e208]
+      - group "Time control type" [ref=e209]:
+        - button "Use preset time controls" [pressed] [ref=e210] [cursor=pointer]: Preset
+        - button "Use custom time controls" [ref=e211] [cursor=pointer]: Custom
+    - generic [ref=e212]:
+      - heading "Presets" [level=2] [ref=e213]
+      - listbox "Time control presets" [ref=e214]:
+        - option "Select preset 1+0, Bullet" [selected] [ref=e215] [cursor=pointer]:
+          - generic [ref=e216]:
+            - generic [ref=e217]: 1+0
+            - generic [ref=e218]: Bullet
+          - img [ref=e220]
+        - option "Select preset 3+2, Blitz" [ref=e222] [cursor=pointer]:
+          - generic [ref=e223]:
+            - generic [ref=e224]: 3+2
+            - generic [ref=e225]: Blitz
+        - option "Select preset 5+0, Blitz" [ref=e227] [cursor=pointer]:
+          - generic [ref=e228]:
+            - generic [ref=e229]: 5+0
+            - generic [ref=e230]: Blitz
+        - option "Select preset 10+0, Rapid" [ref=e232] [cursor=pointer]:
+          - generic [ref=e233]:
+            - generic [ref=e234]: 10+0
+            - generic [ref=e235]: Rapid
+        - option "Select preset 15+10, Rapid +" [ref=e237] [cursor=pointer]:
+          - generic [ref=e238]:
+            - generic [ref=e239]: 15+10
+            - generic [ref=e240]: Rapid +
+        - option "Select preset 30+0, Classical" [ref=e242] [cursor=pointer]:
+          - generic [ref=e243]:
+            - generic [ref=e244]: 30+0
+            - generic [ref=e245]: Classical
+    - region "Custom time control" [ref=e247]:
+      - heading "Custom control" [level=2] [ref=e248]
+      - generic [ref=e249]:
+        - generic [ref=e250]:
+          - generic [ref=e251]: Base minutes
+          - spinbutton "Base minutes" [ref=e252]
+        - generic [ref=e253]:
+          - generic [ref=e254]: Increment seconds
+          - spinbutton "Increment seconds" [ref=e255]: "0"
+        - generic [ref=e256]:
+          - generic [ref=e257]: Delay seconds
+          - spinbutton "Delay seconds" [ref=e258]: "0"
+    - button "Start game with 1+0" [ref=e260] [cursor=pointer]: Start 1+0

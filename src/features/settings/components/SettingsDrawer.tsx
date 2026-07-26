@@ -1,5 +1,4 @@
-import { X } from 'lucide-react'
-import { useEffect, useRef } from 'react'
+import { Drawer, Switch } from '@heroui/react'
 import type { AppSettings } from '@/app/types'
 
 type SettingsDrawerProps = {
@@ -11,150 +10,118 @@ type SettingsDrawerProps = {
 
 export function SettingsDrawer(props: SettingsDrawerProps) {
   const { isOpen, onClose, onUpdateSetting, settings } = props
-  const closeButtonRef = useRef<HTMLButtonElement | null>(null)
-  const previousFocusRef = useRef<HTMLElement | null>(null)
-
-  useEffect(() => {
-    if (!isOpen || typeof document === 'undefined') return
-
-    previousFocusRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null
-    window.setTimeout(() => {
-      closeButtonRef.current?.focus()
-    }, 0)
-
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        onClose()
-      }
-    }
-
-    document.addEventListener('keydown', onKeyDown)
-
-    return () => {
-      document.removeEventListener('keydown', onKeyDown)
-      previousFocusRef.current?.focus()
-    }
-  }, [isOpen, onClose])
-
-  if (!isOpen) {
-    return null
-  }
 
   return (
-    <>
-      <button
-        type="button"
-        aria-label="Close settings"
-        className="fixed inset-0 z-40 bg-slate-950/35"
-        onClick={onClose}
-      />
-
-      <section
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="settings-drawer-title"
-        className="fixed inset-x-0 bottom-0 z-50 rounded-t-3xl border border-slate-200 bg-white shadow-2xl"
-      >
-        <div className="mx-auto w-full max-w-xl px-5 pb-6 pt-4">
-          <div className="flex items-center justify-between">
-            <h2 id="settings-drawer-title" className="text-sm font-semibold uppercase tracking-[0.12em] text-slate-500">
-              Settings
-            </h2>
-            <button
-              ref={closeButtonRef}
-              type="button"
-              onClick={onClose}
-              className="inline-flex size-9 items-center justify-center rounded-full border border-slate-200 text-slate-600 transition hover:bg-slate-50"
-              aria-label="Close settings drawer"
-            >
-              <X className="size-4" />
-            </button>
-          </div>
-
-          <div className="mt-4 space-y-3">
-            <SettingToggle
-              label="Sound"
-              value={settings.sound}
-              onChange={() => onUpdateSetting('sound', !settings.sound)}
-            />
-            <SettingToggle
-              label="Vibration"
-              value={settings.vibration}
-              onChange={() => onUpdateSetting('vibration', !settings.vibration)}
-            />
-            <SettingToggle
-              label="Keep screen awake"
-              value={settings.keepScreenAwake}
-              onChange={() => onUpdateSetting('keepScreenAwake', !settings.keepScreenAwake)}
-            />
-            <SettingToggle
-              label="High-contrast mode"
-              value={settings.highContrastMode}
-              onChange={() => onUpdateSetting('highContrastMode', !settings.highContrastMode)}
-            />
-            <SettingToggle
-              label="Large digits mode"
-              value={settings.largeDigitsMode}
-              onChange={() => onUpdateSetting('largeDigitsMode', !settings.largeDigitsMode)}
-            />
-
-            <div className="rounded-xl border border-slate-200 px-4 py-3">
-              <p className="text-sm font-medium text-slate-800">Layout mode</p>
-              <div className="mt-2 grid grid-cols-2 gap-2" role="group" aria-label="Layout mode">
-                <button
-                  type="button"
-                  onClick={() => onUpdateSetting('layoutMode', 'adaptive')}
-                  aria-pressed={settings.layoutMode === 'adaptive'}
-                  className={`rounded-lg border px-3 py-2 text-xs font-semibold uppercase tracking-[0.12em] transition ${
-                    settings.layoutMode === 'adaptive'
-                      ? 'border-primary bg-orange-50 text-slate-900'
-                      : 'border-slate-200 bg-white text-slate-500'
-                  }`}
+    <Drawer>
+      <Drawer.Backdrop isOpen={isOpen} onOpenChange={onClose} isDismissable>
+        <Drawer.Content placement="bottom">
+          <Drawer.Dialog className="landscape-settings-drawer rounded-t-2xl">
+            <Drawer.Handle />
+            <Drawer.CloseTrigger className="rounded-full bg-slate-100 text-slate-600 hover:bg-slate-200 hover:text-slate-900" />
+            <Drawer.Header>
+              <Drawer.Heading>Settings</Drawer.Heading>
+            </Drawer.Header>
+            <Drawer.Body className="landscape-settings-body">
+              <div className="landscape-settings-content space-y-3">
+                <Switch
+                  isSelected={settings.sound}
+                  onChange={() => onUpdateSetting('sound', !settings.sound)}
+                  aria-label="Sound"
                 >
-                  Adaptive
-                </button>
-                <button
-                  type="button"
-                  onClick={() => onUpdateSetting('layoutMode', 'classic')}
-                  aria-pressed={settings.layoutMode === 'classic'}
-                  className={`rounded-lg border px-3 py-2 text-xs font-semibold uppercase tracking-[0.12em] transition ${
-                    settings.layoutMode === 'classic'
-                      ? 'border-primary bg-orange-50 text-slate-900'
-                      : 'border-slate-200 bg-white text-slate-500'
-                  }`}
+                  <Switch.Content>
+                    <Switch.Control>
+                      <Switch.Thumb />
+                    </Switch.Control>
+                    Sound
+                  </Switch.Content>
+                </Switch>
+
+                <Switch
+                  isSelected={settings.vibration}
+                  onChange={() => onUpdateSetting('vibration', !settings.vibration)}
+                  aria-label="Vibration"
                 >
-                  Classic
-                </button>
+                  <Switch.Content>
+                    <Switch.Control>
+                      <Switch.Thumb />
+                    </Switch.Control>
+                    Vibration
+                  </Switch.Content>
+                </Switch>
+
+                <Switch
+                  isSelected={settings.keepScreenAwake}
+                  onChange={() => onUpdateSetting('keepScreenAwake', !settings.keepScreenAwake)}
+                  aria-label="Keep screen awake"
+                >
+                  <Switch.Content>
+                    <Switch.Control>
+                      <Switch.Thumb />
+                    </Switch.Control>
+                    Keep screen awake
+                  </Switch.Content>
+                </Switch>
+
+                <Switch
+                  isSelected={settings.highContrastMode}
+                  onChange={() => onUpdateSetting('highContrastMode', !settings.highContrastMode)}
+                  aria-label="High-contrast mode"
+                >
+                  <Switch.Content>
+                    <Switch.Control>
+                      <Switch.Thumb />
+                    </Switch.Control>
+                    High-contrast mode
+                  </Switch.Content>
+                </Switch>
+
+                <Switch
+                  isSelected={settings.largeDigitsMode}
+                  onChange={() => onUpdateSetting('largeDigitsMode', !settings.largeDigitsMode)}
+                  aria-label="Large digits mode"
+                >
+                  <Switch.Content>
+                    <Switch.Control>
+                      <Switch.Thumb />
+                    </Switch.Control>
+                    Large digits mode
+                  </Switch.Content>
+                </Switch>
+
+                <div className="landscape-settings-layout rounded-xl p-0">
+                  <p className="text-sm font-medium text-slate-800">Layout mode</p>
+                  <div className="mt-2 grid grid-cols-2 gap-1 rounded-2xl bg-slate-100 p-1" role="group" aria-label="Layout mode">
+                    <button
+                      type="button"
+                      onClick={() => onUpdateSetting('layoutMode', 'adaptive')}
+                      aria-pressed={settings.layoutMode === 'adaptive'}
+                      className={`h-11 rounded-xl px-3 text-sm font-medium transition ${
+                        settings.layoutMode === 'adaptive'
+                          ? 'bg-white text-slate-900 shadow-sm ring-1 ring-slate-200'
+                          : 'text-slate-500 hover:bg-white/70'
+                      }`}
+                    >
+                      Adaptive
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => onUpdateSetting('layoutMode', 'classic')}
+                      aria-pressed={settings.layoutMode === 'classic'}
+                      className={`h-11 rounded-xl px-3 text-sm font-medium transition ${
+                        settings.layoutMode === 'classic'
+                          ? 'bg-white text-slate-900 shadow-sm ring-1 ring-slate-200'
+                          : 'text-slate-500 hover:bg-white/70'
+                      }`}
+                    >
+                      Classic
+                    </button>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-        </div>
-      </section>
-    </>
-  )
-}
-
-type SettingToggleProps = {
-  label: string
-  value: boolean
-  onChange: () => void
-}
-
-function SettingToggle(props: SettingToggleProps) {
-  return (
-    <div className="flex items-center justify-between rounded-xl border border-slate-200 px-4 py-3">
-      <p className="text-sm font-medium text-slate-800">{props.label}</p>
-      <button
-        type="button"
-        onClick={props.onChange}
-        aria-label={`${props.label} ${props.value ? 'on' : 'off'}`}
-        aria-pressed={props.value}
-        className={`rounded-lg border px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.12em] transition ${
-          props.value ? 'border-primary bg-orange-50 text-slate-900' : 'border-slate-200 bg-white text-slate-500'
-        }`}
-      >
-        {props.value ? 'On' : 'Off'}
-      </button>
-    </div>
+            </Drawer.Body>
+          </Drawer.Dialog>
+        </Drawer.Content>
+      </Drawer.Backdrop>
+    </Drawer>
   )
 }

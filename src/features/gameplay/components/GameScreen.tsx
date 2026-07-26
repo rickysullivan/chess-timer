@@ -1,6 +1,6 @@
-import { Clock3, RotateCcw, Undo2 } from 'lucide-react'
-import { useEffect, type ReactNode } from 'react'
-import { Button } from '@/components/ui/button'
+import { CornerDownLeft, RotateCcw } from 'lucide-react'
+import { useCallback, useEffect, useState, type ReactNode } from 'react'
+import { AlertDialog, Button } from '@heroui/react'
 import { formatMs, type ActionMessageTone, type AppSettings, type Side, type TimeControl } from '@/app/types'
 
 type GameScreenProps = {
@@ -13,7 +13,6 @@ type GameScreenProps = {
   startedControl: TimeControl
   activeSide: Side
   remainingMs: Record<Side, number>
-  activeDelayRemainingMs: number
   timeoutSide: Side | null
   isPaused: boolean
   canUndo: boolean
@@ -27,9 +26,18 @@ type GameScreenProps = {
 }
 
 export function GameScreen(props: GameScreenProps) {
-  const { onDismissOnboarding } = props
-  const inactiveSide = props.activeSide === 'White' ? 'Black' : 'White'
+  const { onDismissOnboarding, onReset } = props
   const shouldShowOnboardingCue = props.settings.layoutMode === 'adaptive' && !props.onboardingSeen
+  const [isResetDialogOpen, setIsResetDialogOpen] = useState(false)
+  const isEnded = Boolean(props.timeoutSide)
+
+  const handleReset = useCallback(() => {
+    setIsResetDialogOpen(true)
+  }, [])
+
+  const handleResetConfirm = useCallback(() => {
+    onReset()
+  }, [onReset])
 
   useEffect(() => {
     if (!shouldShowOnboardingCue) return
@@ -43,227 +51,462 @@ export function GameScreen(props: GameScreenProps) {
     }
   }, [onDismissOnboarding, shouldShowOnboardingCue])
 
-  const startedHint = props.isPaused
-    ? 'Game is paused. Resume when both players are ready.'
-    : props.settings.layoutMode === 'adaptive'
-      ? 'Tap your active side to switch. Tap the small strip to pause.'
-      : 'Tap the active timer to switch. Tap Pause to stop the clock.'
   const activeIndicatorText = `${props.activeSide} to move`
-  const timerGroupClass = props.settings.highContrastMode
-    ? 'mt-3 flex gap-2 border-2 border-slate-900 bg-slate-50 p-2'
-    : 'mt-3 flex gap-2'
-  const pausedTimerCardClass = props.settings.highContrastMode
-    ? 'rounded-lg border-2 border-slate-800 bg-white px-3 py-3 text-left'
-    : 'rounded-lg border border-slate-200 bg-white px-3 py-3 text-left'
-  const activeTimerClass = props.settings.highContrastMode
-    ? 'flex-[4] rounded-xl border-2 border-slate-950 bg-amber-200 px-4 py-4 text-left text-slate-950 transition hover:bg-amber-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'
-    : 'flex-[4] rounded-xl border border-primary bg-orange-50 px-4 py-4 text-left text-slate-900 transition hover:bg-orange-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'
-  const inactiveTimerClass = props.settings.highContrastMode
-    ? 'flex-1 rounded-xl border-2 border-slate-700 bg-white px-4 py-3 text-left text-slate-800 transition hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'
-    : 'flex-1 rounded-xl border border-slate-200 bg-white px-4 py-3 text-left text-slate-600 transition hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'
-  const pausedDigitSizeClass = props.settings.largeDigitsMode ? 'text-3xl md:text-4xl' : 'text-2xl'
-  const activeDigitSizeClass = props.settings.largeDigitsMode ? 'text-5xl md:text-6xl' : 'text-4xl md:text-5xl'
-  const inactiveDigitSizeClass = props.settings.largeDigitsMode ? 'text-3xl md:text-4xl' : 'text-2xl'
-  const isEnded = Boolean(props.timeoutSide)
+  const pausedDigitSizeClass = props.settings.largeDigitsMode ? 'text-5xl md:text-6xl' : 'text-2xl'
+  const activeDigitSizeClass = props.settings.largeDigitsMode ? 'text-7xl md:text-8xl' : 'text-4xl md:text-5xl'
+  const inactiveDigitSizeClass = props.settings.largeDigitsMode ? 'text-5xl md:text-6xl' : 'text-2xl'
+  const isPlaying = !props.isPaused && !isEnded
+  const hideChrome = isPlaying
 
   return (
-    <main className="min-h-screen touch-none overflow-hidden overscroll-none bg-slate-100">
-      <div className="mx-auto flex min-h-screen w-full max-w-xl flex-col px-5 py-8 md:py-10">
-        <div className="mb-6 flex items-center justify-between gap-3">
-          <div className="inline-flex w-fit items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm">
-            <Clock3 className="size-4" />
-            chess-timer
+    <main id="game-screen" className="flex min-h-screen touch-none flex-col overflow-hidden overscroll-none bg-slate-100">
+      <div className="flex w-full flex-1 flex-col px-5 py-4 md:py-6">
+        <div
+          id="game-chrome"
+          className={`transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] ${
+            hideChrome ? 'mt-0 max-h-0 overflow-hidden opacity-0' : 'mt-0 max-h-40 opacity-100'
+          }`}
+        >
+          <div className="flex items-center justify-between gap-2">
+            <div id="game-brand" className="flex items-center gap-2.5">
+              <img
+                src="/icons/plychss-mark.svg"
+                alt=""
+                aria-hidden="true"
+                className="size-8 rounded-lg shadow-sm"
+              />
+              <p className="text-base font-bold tracking-tight text-slate-950">PlyChss</p>
+              <span className="rounded-full bg-white px-2.5 py-1 text-[11px] font-medium text-slate-600 ring-1 ring-slate-200 sm:text-xs">
+                {props.startedControl.label}
+              </span>
+            </div>
+            {props.headerActions}
           </div>
-          {props.headerActions}
+          {props.actionMessage ? (
+            <p
+              id="game-action-message"
+              className={`mt-2 text-sm ${
+                props.actionMessage.tone === 'success'
+                  ? 'text-emerald-700'
+                  : props.actionMessage.tone === 'error'
+                    ? 'text-red-600'
+                    : 'text-slate-600'
+              }`}
+              role="status"
+              aria-live="polite"
+            >
+              {props.actionMessage.text}
+            </p>
+          ) : null}
+          {shouldShowOnboardingCue ? (
+            <div
+              id="game-onboarding"
+              className="mt-3 flex items-start justify-between gap-3 rounded-xl border border-sky-200 bg-sky-50 px-4 py-3 text-sm text-sky-900"
+            >
+              <p>Tap your side to switch. Tap the small strip to pause.</p>
+              <button
+                type="button"
+                onClick={props.onDismissOnboarding}
+                aria-label="Dismiss onboarding tip"
+                className="inline-flex h-11 shrink-0 items-center justify-center rounded-full border border-sky-300 bg-white px-4 text-sm font-medium text-sky-900 transition hover:bg-sky-100"
+              >
+                Dismiss
+              </button>
+            </div>
+          ) : null}
+          {props.warningBanner}
         </div>
-        {props.actionMessage ? (
-          <p
-            className={`mb-3 text-sm ${
-              props.actionMessage.tone === 'success'
-                ? 'text-emerald-700'
-                : props.actionMessage.tone === 'error'
-                  ? 'text-red-600'
-                  : 'text-slate-600'
-            }`}
-            role="status"
-            aria-live="polite"
-          >
-            {props.actionMessage.text}
-          </p>
-        ) : null}
+
         <p className="sr-only" aria-live="polite" aria-atomic="true">
           {props.liveAnnouncement}
         </p>
 
-        <h1 className="text-balance text-3xl font-semibold tracking-tight text-slate-950 md:text-4xl">Game started.</h1>
-        <p className="mt-3 text-sm text-slate-600 md:text-base">{startedHint}</p>
-        {shouldShowOnboardingCue ? (
-          <div className="mt-3 flex items-start justify-between gap-3 rounded-xl border border-sky-200 bg-sky-50 px-4 py-3 text-sm text-sky-900">
-            <p>Tap your side to switch. Tap the small strip to pause.</p>
-            <button
-              type="button"
-              onClick={props.onDismissOnboarding}
-              aria-label="Dismiss onboarding tip"
-              className="inline-flex items-center justify-center rounded-md border border-sky-300 bg-white px-2 py-1 text-xs font-semibold uppercase tracking-[0.08em] text-sky-800 transition hover:bg-sky-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        <div
+          id="game-timers"
+          className={`flex flex-1 flex-col min-h-0 ${hideChrome ? 'mt-0' : 'mt-4'} transition-[margin] duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]`}
+        >
+          {!isEnded ? (
+            <div
+              className={`transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] ${
+                hideChrome ? 'max-h-0 overflow-hidden opacity-0' : 'max-h-6 opacity-100'
+              }`}
             >
-              Dismiss
-            </button>
-          </div>
-        ) : null}
-        {props.warningBanner}
-
-        <section className="mt-8 space-y-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-          <h2 className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">Active control</h2>
-
-          <div className="rounded-xl border border-orange-100 bg-orange-50 px-4 py-3">
-            <p className="text-lg font-semibold text-slate-900">{props.startedControl.label}</p>
-            <p className="mt-1 text-sm text-slate-600">
-              {props.startedControl.baseMinutes} min base, +{props.startedControl.incrementSeconds}s increment,
-              {` `}
-              {props.startedControl.delaySeconds}s delay
-            </p>
-            <p className="mt-2 text-xs font-medium uppercase tracking-[0.12em] text-slate-500">
-              {props.startedControl.source === 'preset' ? 'Preset control' : 'Custom control'}
-            </p>
-          </div>
-
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">Timers</p>
-            <p
-              className={`mt-1 text-sm font-semibold ${props.settings.highContrastMode ? 'text-slate-950' : 'text-slate-700'}`}
-              aria-live="polite"
-            >
-              {activeIndicatorText}
-            </p>
-            {props.activeDelayRemainingMs > 0 && !props.isPaused && !props.timeoutSide ? (
-              <p className="mt-1 text-xs font-medium uppercase tracking-[0.12em] text-slate-500" aria-live="polite">
-                Delay: {(props.activeDelayRemainingMs / 1000).toFixed(1)}s
+              <p
+                id="game-active-indicator"
+                className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-500"
+              >
+                {activeIndicatorText}
               </p>
-            ) : null}
-
-            {isEnded ? (
-              <p className="mt-2 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-xs font-semibold uppercase tracking-[0.12em] text-red-700">
-                Time Out
-              </p>
-            ) : null}
-
-            {props.isPaused ? (
-              <div className="mt-3 space-y-3" aria-live="polite">
-                <div className="grid grid-cols-2 gap-2" role="group" aria-label="Paused timers">
-                  <div className={`${pausedTimerCardClass} ${props.timeoutSide === 'White' ? 'opacity-45' : ''}`}>
-                    <p className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">White</p>
-                    <p className={`mt-1 font-semibold tabular-nums text-slate-900 ${pausedDigitSizeClass}`}>
-                      {formatMs(props.remainingMs.White)}
+            </div>
+          ) : null}
+          {props.isPaused && !isEnded ? (
+            <div className="mt-3 flex flex-1 flex-col gap-3 animate-fade-in" aria-live="polite">
+              <div
+                className={`flex flex-1 gap-5 ${
+                  props.settings.layoutMode === 'classic'
+                    ? 'flex-col sm:flex-row'
+                    : 'adaptive-landscape flex-col md:flex-row'
+                }`}
+                role="group"
+                aria-label="Paused timers"
+              >
+                <div
+                  className={`flex flex-1 flex-col justify-center rounded-xl border px-4 py-4 ${
+                    props.settings.layoutMode === 'classic' ? 'items-center text-center' : 'text-left'
+                  } ${
+                    props.settings.highContrastMode
+                      ? 'border-2 border-slate-800 bg-white text-slate-900'
+                      : 'border border-slate-200 bg-slate-50 text-slate-900'
+                  }`}
+                >
+                  <div className="rotate-180">
+                    <p className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">
+                      Black{props.activeSide === 'Black' ? ' (active)' : ''}
                     </p>
-                    {props.timeoutSide === 'White' ? (
-                      <p className="mt-1 text-xs font-semibold uppercase tracking-[0.12em] text-red-600">Time Out</p>
-                    ) : null}
+                    <p className={`mt-1 font-semibold tabular-nums ${pausedDigitSizeClass}`}>
+                      {formatMs(props.remainingMs.Black)}
+                    </p>
                   </div>
-                  <div className={`${pausedTimerCardClass} ${props.timeoutSide === 'Black' ? 'opacity-45' : ''}`}>
+                </div>
+                <div
+                  className={`flex flex-1 flex-col justify-center rounded-xl border px-4 py-4 ${
+                    props.settings.layoutMode === 'classic' ? 'items-center text-center' : 'text-left'
+                  } ${
+                    props.settings.highContrastMode
+                      ? 'border-2 border-slate-800 bg-white text-slate-900'
+                      : 'border border-slate-200 bg-slate-50 text-slate-900'
+                  }`}
+                >
+                  <p className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">
+                    White{props.activeSide === 'White' ? ' (active)' : ''}
+                  </p>
+                  <p className={`mt-1 font-semibold tabular-nums ${pausedDigitSizeClass}`}>
+                    {formatMs(props.remainingMs.White)}
+                  </p>
+                </div>
+              </div>
+              <Button
+                className="w-full shadow-sm"
+                onPress={props.onPauseResume}
+                aria-label={`Resume game with ${props.activeSide} to move`}
+              >
+                Resume ({props.activeSide} to move)
+              </Button>
+            </div>
+          ) : isEnded ? (
+            <div className="mt-3 flex flex-1 flex-col gap-3 animate-fade-in" aria-live="polite">
+              <div
+                className={`flex flex-1 gap-5 ${props.settings.layoutMode === 'classic' ? 'flex-col sm:flex-row' : 'flex-col md:flex-row'}`}
+                role="group"
+                aria-label="Game ended timers"
+              >
+                <div
+                  className={`flex flex-1 flex-col justify-center rounded-xl border px-4 py-4 ${
+                    props.settings.layoutMode === 'classic' ? 'items-center text-center' : 'text-left'
+                  } ${
+                    props.timeoutSide === 'Black'
+                      ? 'border border-slate-200 bg-slate-100 opacity-60'
+                      : 'border-2 border-emerald-400 bg-emerald-50 text-emerald-900'
+                  }`}
+                >
+                  <div className="rotate-180">
                     <p className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">Black</p>
-                    <p className={`mt-1 font-semibold tabular-nums text-slate-900 ${pausedDigitSizeClass}`}>
-                      <span className="inline-block rotate-180">{formatMs(props.remainingMs.Black)}</span>
+                    <p
+                      className={`mt-1 font-semibold tabular-nums ${pausedDigitSizeClass} ${
+                        props.timeoutSide === 'Black' ? 'line-through' : ''
+                      }`}
+                    >
+                      {formatMs(props.remainingMs.Black)}
                     </p>
                     {props.timeoutSide === 'Black' ? (
-                      <p className="mt-1 text-xs font-semibold uppercase tracking-[0.12em] text-red-600">Time Out</p>
+                      <p className="mt-1 text-xs font-semibold uppercase tracking-[0.12em] text-red-600">
+                        Time Out
+                      </p>
                     ) : null}
                   </div>
                 </div>
-
-                {props.timeoutSide ? null : (
-                  <Button
-                    className="w-full"
-                    onClick={props.onPauseResume}
-                    aria-label={`Resume game with ${props.activeSide} to move`}
+                <div
+                  className={`flex flex-1 flex-col justify-center rounded-xl border px-4 py-4 ${
+                    props.settings.layoutMode === 'classic' ? 'items-center text-center' : 'text-left'
+                  } ${
+                    props.timeoutSide === 'White'
+                      ? 'border border-slate-200 bg-slate-100 opacity-60'
+                      : 'border-2 border-emerald-400 bg-emerald-50 text-emerald-900'
+                  }`}
+                >
+                  <p className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">White</p>
+                  <p
+                    className={`mt-1 font-semibold tabular-nums ${pausedDigitSizeClass} ${
+                      props.timeoutSide === 'White' ? 'line-through' : ''
+                    }`}
                   >
-                    Resume ({props.activeSide} to move)
-                  </Button>
-                )}
-              </div>
-            ) : (
-              <div
-                className={`${timerGroupClass} ${
-                  props.settings.layoutMode === 'adaptive' ? 'h-[18rem] flex-col md:h-[14rem] md:flex-row' : 'h-[18rem] flex-col'
-                }`}
-                aria-live="polite"
-              >
-                <button
-                  type="button"
-                  onClick={() => props.onSideTap(props.activeSide)}
-                  disabled={isEnded}
-                  aria-label={`${props.activeSide} active timer. ${formatMs(props.remainingMs[props.activeSide])}. Tap to pass turn.`}
-                  className={`${activeTimerClass} ${isEnded ? 'cursor-not-allowed opacity-70' : ''}`}
-                >
-                  <p className="text-xs font-semibold uppercase tracking-[0.12em]">{props.activeSide} (active)</p>
-                  <p className={`mt-2 font-semibold tabular-nums ${activeDigitSizeClass}`}>
-                    <span className={props.activeSide === 'Black' ? 'inline-block rotate-180' : undefined}>
-                      {formatMs(props.remainingMs[props.activeSide])}
-                    </span>
+                    {formatMs(props.remainingMs.White)}
                   </p>
-                  <p className="mt-2 text-xs font-medium uppercase tracking-[0.12em] text-slate-600">Tap to pass turn</p>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => props.onSideTap(inactiveSide)}
-                  disabled={isEnded}
-                  aria-label={`${inactiveSide} inactive timer. ${formatMs(props.remainingMs[inactiveSide])}. Tap to pause game.`}
-                  className={`${inactiveTimerClass} ${isEnded ? 'cursor-not-allowed opacity-60' : ''}`}
-                >
-                  <p className="text-xs font-semibold uppercase tracking-[0.12em]">{inactiveSide}</p>
-                  <p className={`mt-1 font-semibold tabular-nums text-slate-900 ${inactiveDigitSizeClass}`}>
-                    <span className={inactiveSide === 'Black' ? 'inline-block rotate-180' : undefined}>
-                      {formatMs(props.remainingMs[inactiveSide])}
-                    </span>
-                  </p>
-                  <p className="mt-1 text-xs font-medium uppercase tracking-[0.12em] text-slate-500">Tap to pause</p>
-                </button>
+                  {props.timeoutSide === 'White' ? (
+                    <p className="mt-1 text-xs font-semibold uppercase tracking-[0.12em] text-red-600">
+                      Time Out
+                    </p>
+                  ) : null}
+                </div>
               </div>
-            )}
-
-            {props.timeoutSide ? (
-              <p className="mt-3 text-sm font-medium text-red-600" role="alert">
-                {props.timeoutSide} ran out of time.
+              <p className="text-center text-sm font-semibold text-red-600" role="alert">
+                {props.timeoutSide} ran out of time. {props.timeoutSide === 'White' ? 'Black wins!' : 'White wins!'}
               </p>
-            ) : null}
-
-            {isEnded ? (
-              <div className="mt-4" role="group" aria-label="Game end controls">
-                <Button className="w-full" variant="outline" onClick={props.onReset} aria-label="Reset game to initial time control">
-                  <RotateCcw className="mr-2 size-4" />
-                  Reset
-                </Button>
-              </div>
-            ) : (
-              <div className="mt-4 grid grid-cols-3 gap-2" role="group" aria-label="In-game controls">
+              <div className="flex w-full gap-3" role="group" aria-label="Game end controls">
                 <Button
                   variant="outline"
-                  onClick={props.onPauseResume}
-                  disabled={Boolean(props.timeoutSide)}
-                  aria-label={props.isPaused ? 'Resume game' : 'Pause game'}
+                  onPress={props.onBackToSetup}
+                  aria-label="Return to setup screen"
+                  className="flex-1"
                 >
-                  {props.isPaused ? 'Resume' : 'Pause'}
+                  Back to Setup
                 </Button>
-                <Button variant="outline" onClick={props.onUndo} disabled={!props.canUndo} aria-label="Undo last turn switch">
-                  <Undo2 className="mr-2 size-4" />
-                  Undo
-                </Button>
-                <Button variant="outline" onClick={props.onReset} aria-label="Reset game to initial time control">
+                <Button
+                  variant="danger-soft"
+                  onPress={handleReset}
+                  aria-label="Reset game to initial time control"
+                  className="flex-1 shadow-sm"
+                >
                   <RotateCcw className="mr-2 size-4" />
                   Reset
                 </Button>
               </div>
-            )}
-          </div>
-        </section>
+            </div>
+          ) : (
+            <div
+              className={`flex flex-1 min-h-0 gap-5 ${hideChrome ? 'mt-0' : 'mt-3'} transition-[margin] duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] ${
+                props.settings.layoutMode === 'adaptive'
+                  ? 'adaptive-landscape flex-col md:h-auto md:flex-row'
+                  : 'flex-col sm:flex-row'
+              } ${props.settings.highContrastMode ? 'bg-slate-100 p-2' : ''}`}
+              aria-live="polite"
+            >
+              {props.settings.layoutMode === 'classic' ? (
+                <>
+                  <button
+                    type="button"
+                    id="timer-black"
+                    onClick={() => props.onSideTap('Black')}
+                    disabled={isEnded}
+                    aria-label={`Black ${props.activeSide === 'Black' ? 'active' : 'inactive'} timer. ${formatMs(props.remainingMs.Black)}. ${props.activeSide === 'Black' ? 'Tap to pass turn.' : 'Tap to pause game.'}`}
+                    className={`flex flex-1 flex-col items-center justify-center rounded-3xl px-4 py-4 text-center transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring ${
+                      props.settings.highContrastMode
+                        ? props.activeSide === 'Black'
+                          ? 'border-2 border-slate-950 bg-amber-200 text-slate-950 hover:bg-amber-300'
+                          : 'border-2 border-slate-700 bg-slate-100 text-slate-800 hover:bg-slate-200'
+                        : props.activeSide === 'Black'
+                          ? 'border border-orange-200 bg-orange-50 text-slate-900 hover:bg-orange-100'
+                          : 'border border-slate-200 bg-white text-slate-600 hover:bg-slate-50'
+                    }`}
+                  >
+                    <div className="rotate-180">
+                      <p className="text-xs font-semibold uppercase tracking-[0.12em]">
+                        Black{props.activeSide === 'Black' ? ' (active)' : ''}
+                      </p>
+                      <p className={`mt-2 font-semibold tabular-nums ${activeDigitSizeClass}`}>
+                        {formatMs(props.remainingMs.Black)}
+                      </p>
+                      <p className="mt-2 text-xs font-medium uppercase tracking-[0.12em] text-slate-500">
+                        {props.activeSide === 'Black' ? 'Tap to pass turn' : 'Tap to pause'}
+                      </p>
+                    </div>
+                  </button>
 
-        <div className="mt-auto grid gap-3 pt-8">
-          <Button onClick={props.onBackToSetup} aria-label="Return to setup screen" disabled={isEnded}>
-            Back to Setup
-          </Button>
+                  <button
+                    type="button"
+                    id="timer-white"
+                    onClick={() => props.onSideTap('White')}
+                    disabled={isEnded}
+                    aria-label={`White ${props.activeSide === 'White' ? 'active' : 'inactive'} timer. ${formatMs(props.remainingMs.White)}. ${props.activeSide === 'White' ? 'Tap to pass turn.' : 'Tap to pause game.'}`}
+                    className={`flex flex-1 flex-col items-center justify-center rounded-3xl px-4 py-4 text-center transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring ${
+                      props.settings.highContrastMode
+                        ? props.activeSide === 'White'
+                          ? 'border-2 border-slate-950 bg-amber-200 text-slate-950 hover:bg-amber-300'
+                          : 'border-2 border-slate-700 bg-slate-100 text-slate-800 hover:bg-slate-200'
+                        : props.activeSide === 'White'
+                          ? 'border border-orange-200 bg-orange-50 text-slate-900 hover:bg-orange-100'
+                          : 'border border-slate-200 bg-white text-slate-600 hover:bg-slate-50'
+                    }`}
+                  >
+                    <p className="text-xs font-semibold uppercase tracking-[0.12em]">
+                      White{props.activeSide === 'White' ? ' (active)' : ''}
+                    </p>
+                    <p className={`mt-2 font-semibold tabular-nums ${activeDigitSizeClass}`}>
+                      {formatMs(props.remainingMs.White)}
+                    </p>
+                    <p className="mt-2 text-xs font-medium uppercase tracking-[0.12em] text-slate-500">
+                      {props.activeSide === 'White' ? 'Tap to pass turn' : 'Tap to pause'}
+                    </p>
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button
+                    type="button"
+                    id="timer-black"
+                    onClick={() => props.onSideTap('Black')}
+                    disabled={isEnded}
+                    aria-label={`Black ${props.activeSide === 'Black' ? 'active' : 'inactive'} timer. ${formatMs(props.remainingMs.Black)}. ${props.activeSide === 'Black' ? 'Tap to pass turn.' : 'Tap to pause game.'}`}
+                    className={`flex transition-all duration-200 ease-in-out ${
+                      props.activeSide === 'Black' ? 'flex-[3]' : 'flex-1'
+                    } flex-col justify-center rounded-3xl px-4 ${props.activeSide === 'Black' ? 'py-4' : 'py-3'} text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring ${
+                      props.settings.highContrastMode
+                        ? props.activeSide === 'Black'
+                          ? 'border-2 border-slate-950 bg-amber-200 text-slate-950 hover:bg-amber-300'
+                          : 'border-2 border-slate-700 bg-slate-100 text-slate-800 hover:bg-slate-200'
+                        : props.activeSide === 'Black'
+                          ? 'border border-orange-200 bg-orange-50 text-slate-900 hover:bg-orange-100'
+                          : 'border border-slate-200 bg-white text-slate-600 hover:bg-slate-50'
+                    }`}
+                  >
+                    <div className="rotate-180">
+                      {props.activeSide === 'Black' ? (
+                        <>
+                          <p className="text-xs font-semibold uppercase tracking-[0.12em]">Black (active)</p>
+                          <p className={`mt-2 font-semibold tabular-nums ${activeDigitSizeClass}`}>
+                            {formatMs(props.remainingMs.Black)}
+                          </p>
+                          <p className="mt-2 text-xs font-medium uppercase tracking-[0.12em] text-slate-500">
+                            Tap to pass turn
+                          </p>
+                        </>
+                      ) : (
+                        <>
+                          <p className="text-xs font-semibold uppercase tracking-[0.12em]">Black</p>
+                          <p className={`mt-1 font-semibold tabular-nums text-slate-900 ${inactiveDigitSizeClass}`}>
+                            {formatMs(props.remainingMs.Black)}
+                          </p>
+                          <p className="mt-1 text-xs font-medium uppercase tracking-[0.12em] text-slate-500">
+                            Tap to pause
+                          </p>
+                        </>
+                      )}
+                    </div>
+                  </button>
+
+                  <button
+                    type="button"
+                    id="timer-white"
+                    onClick={() => props.onSideTap('White')}
+                    disabled={isEnded}
+                    aria-label={`White ${props.activeSide === 'White' ? 'active' : 'inactive'} timer. ${formatMs(props.remainingMs.White)}. ${props.activeSide === 'White' ? 'Tap to pass turn.' : 'Tap to pause game.'}`}
+                    className={`flex transition-all duration-200 ease-in-out ${
+                      props.activeSide === 'White' ? 'flex-[3]' : 'flex-1'
+                    } flex-col justify-center rounded-3xl px-4 ${props.activeSide === 'White' ? 'py-4' : 'py-3'} text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring ${
+                      props.settings.highContrastMode
+                        ? props.activeSide === 'White'
+                          ? 'border-2 border-slate-950 bg-amber-200 text-slate-950 hover:bg-amber-300'
+                          : 'border-2 border-slate-700 bg-slate-100 text-slate-800 hover:bg-slate-200'
+                        : props.activeSide === 'White'
+                          ? 'border border-orange-200 bg-orange-50 text-slate-900 hover:bg-orange-100'
+                          : 'border border-slate-200 bg-white text-slate-600 hover:bg-slate-50'
+                    }`}
+                  >
+                    {props.activeSide === 'White' ? (
+                      <>
+                        <p className="text-xs font-semibold uppercase tracking-[0.12em]">White (active)</p>
+                        <p className={`mt-2 font-semibold tabular-nums ${activeDigitSizeClass}`}>
+                          {formatMs(props.remainingMs.White)}
+                        </p>
+                        <p className="mt-2 text-xs font-medium uppercase tracking-[0.12em] text-slate-500">
+                          Tap to pass turn
+                        </p>
+                      </>
+                    ) : (
+                      <>
+                        <p className="text-xs font-semibold uppercase tracking-[0.12em]">White</p>
+                        <p className={`mt-1 font-semibold tabular-nums text-slate-900 ${inactiveDigitSizeClass}`}>
+                          {formatMs(props.remainingMs.White)}
+                        </p>
+                        <p className="mt-1 text-xs font-medium uppercase tracking-[0.12em] text-slate-500">
+                          Tap to pause
+                        </p>
+                      </>
+                    )}
+                  </button>
+                </>
+              )}
+            </div>
+          )}
+        </div>
+
+        <div
+          id="game-controls"
+          className={`transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] ${
+            hideChrome ? 'max-h-0 overflow-hidden opacity-0' : 'max-h-40 opacity-100'
+          }`}
+        >
+          {!isEnded && props.isPaused ? (
+            <div
+              id="game-pause-controls"
+              className="mt-4 grid grid-cols-2 gap-2"
+              role="group"
+              aria-label="Paused game controls"
+            >
+              <Button
+                variant="outline"
+                onPress={props.onUndo}
+                isDisabled={!props.canUndo}
+                aria-label="Undo last turn switch"
+                className="w-full border-slate-200 bg-white text-slate-800 shadow-sm hover:bg-slate-50"
+              >
+                <CornerDownLeft className="mr-2 size-4" />
+                Undo
+              </Button>
+              <Button
+                variant="outline"
+                onPress={handleReset}
+                aria-label="Reset game to initial time control"
+                className="w-full border-slate-200 bg-white text-slate-800 shadow-sm hover:bg-slate-50"
+              >
+                <RotateCcw className="mr-2 size-4" />
+                Reset
+              </Button>
+            </div>
+          ) : null}
+
+          {!isEnded ? (
+            <div id="game-back-to-setup" className="pt-4">
+              <Button
+                variant="outline"
+                onPress={props.onBackToSetup}
+                aria-label="Return to setup screen"
+                className="w-full border-slate-200 bg-slate-100 text-slate-700 hover:bg-slate-200 hover:text-slate-900"
+              >
+                Back to Setup
+              </Button>
+            </div>
+          ) : null}
         </div>
       </div>
       {props.settingsDrawer}
+
+      <AlertDialog>
+        <AlertDialog.Backdrop isOpen={isResetDialogOpen} onOpenChange={setIsResetDialogOpen} isDismissable>
+          <AlertDialog.Container>
+            <AlertDialog.Dialog className="sm:max-w-[400px]">
+              <AlertDialog.Header>
+                <AlertDialog.Heading className="text-lg font-semibold text-slate-900">
+                  Reset game?
+                </AlertDialog.Heading>
+              </AlertDialog.Header>
+              <AlertDialog.Body>
+                <p className="text-slate-600">
+                  This will reset the game and clear undo history. This action cannot be undone.
+                </p>
+              </AlertDialog.Body>
+              <AlertDialog.Footer className="flex-col-reverse sm:flex-row">
+                <Button slot="close" variant="tertiary" className="w-full sm:w-auto text-slate-700">
+                  Cancel
+                </Button>
+                <Button slot="close" variant="danger" onPress={handleResetConfirm} className="w-full sm:w-auto">
+                  Reset
+                </Button>
+              </AlertDialog.Footer>
+            </AlertDialog.Dialog>
+          </AlertDialog.Container>
+        </AlertDialog.Backdrop>
+      </AlertDialog>
     </main>
   )
 }
