@@ -1,6 +1,6 @@
 # Chess Timer
 
-Vite + React + TypeScript setup with PWA support, Tailwind, shadcn/ui wiring, and Cloudflare Pages deployment through GitHub Actions.
+Vite + React + TypeScript setup with PWA support, Tailwind, HeroUI, and Cloudflare Pages hosting.
 
 ## Requirements
 
@@ -44,12 +44,11 @@ Copy `.env.example` to `.env` and set the values:
 - `VITE_SENTRY_DSN`
 - `VITE_SENTRY_ENVIRONMENT`
 
-## Cloudflare Pages CI/CD
+## Cloudflare Pages
 
-The workflow in `.github/workflows/deploy-cloudflare-pages.yml` deploys on pushes to `main`.
+Production deployment is managed by the Cloudflare Pages project rather than GitHub Actions.
+For a local or manual deployment, run:
 
-Add these GitHub repository secrets:
-
-- `CLOUDFLARE_API_TOKEN`
-- `CLOUDFLARE_ACCOUNT_ID`
-- `CLOUDFLARE_PAGES_PROJECT_NAME`
+```bash
+npm run deploy:cloudflare
+```
