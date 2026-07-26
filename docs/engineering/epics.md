@@ -83,7 +83,7 @@ NFR20: Mobile-first responsive layout with safe-area insets and controls reachab
 - Analytics via PostHog and error tracking via Sentry; event names/properties in snake_case and include `session_id` and `layout_mode` on core events.
 - Hosting on Cloudflare Pages with GitHub Actions CI/CD; build-time env config only.
 - UI defaults on first launch: sound ON, vibration ON, layout mode adaptive.
-- MVP preset list: 1+0, 3+2, 5+0, 10+0, 15+10, 30+0.
+- MVP preset list: 1+0, 3+2, 5+0, 10+0, 15+10, 30+0, 90+30.
 - Adaptive 80/20 layout is default with classic 50/50 toggle; inactive strip tap pauses; paused state expands to 50/50.
 - Provide a lightweight onboarding cue for adaptive layout and pause gesture.
 - Wake Lock integration with non-blocking banner when unsupported.
@@ -168,7 +168,7 @@ So that I can start a game quickly.
 
 **Given** the landing screen loads
 **When** the preset list is displayed
-**Then** the MVP presets appear (1+0, 3+2, 5+0, 10+0, 15+10, 30+0)
+**Then** the MVP presets appear (1+0, 3+2, 5+0, 10+0, 15+10, 30+0, 90+30)
 **And** exactly one preset can be selected with an accent outline and check icon
 **And** the selected item sets `aria-selected=true`
 

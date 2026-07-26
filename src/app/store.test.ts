@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest'
-import { DEFAULT_SETTINGS, STORAGE_KEYS, type TimeControl } from '@/app/types'
+import { DEFAULT_SETTINGS, PRESETS, STORAGE_KEYS, type TimeControl } from '@/app/types'
 import { useAppStore } from '@/app/store'
 
 const TEST_CONTROL: TimeControl = {
@@ -111,6 +111,20 @@ describe('app store gameplay timing', () => {
     expect(after.remainingMs).toEqual({ White: 60_000, Black: 60_000 })
     expect(after.undoHistory).toHaveLength(0)
     expect(after.timeoutSide).toBeNull()
+  })
+})
+
+describe('time-control presets', () => {
+  it('uses standard chess speed labels for the presets', () => {
+    expect(PRESETS.map(({ id, description }) => [id, description])).toEqual([
+      ['1+0', 'Bullet'],
+      ['3+2', 'Blitz'],
+      ['5+0', 'Blitz'],
+      ['10+0', 'Blitz'],
+      ['15+10', 'Rapid +'],
+      ['30+0', 'Rapid'],
+      ['90+30', 'Classical'],
+    ])
   })
 })
 
