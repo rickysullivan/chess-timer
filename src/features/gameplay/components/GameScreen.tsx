@@ -59,7 +59,7 @@ export function GameScreen(props: GameScreenProps) {
   const hideChrome = isPlaying
 
   return (
-    <main id="game-screen" className="flex min-h-screen flex-col bg-slate-100">
+    <main id="game-screen" className="flex min-h-screen touch-none flex-col overflow-hidden overscroll-none bg-slate-100">
       <div className="flex w-full flex-1 flex-col px-5 py-4 md:py-6">
         <div
           id="game-chrome"
