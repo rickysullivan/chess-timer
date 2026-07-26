@@ -70,12 +70,12 @@ Web application (React + TypeScript) with offline-first PWA requirements.
 ### Starter Options Considered
 
 **Option A: Vite React TS (create-vite)**
-- Command: `npm create vite@latest chess-timer -- --template react-ts`
+- Command: `pnpm create vite@latest chess-timer --template react-ts`
 - Pros: minimal baseline, maximum control.
 - Cons: must add PWA config and service worker manually.
 
 **Option B: Vite PWA React TS (create-pwa)**
-- Command: `npm create @vite-pwa/pwa@latest chess-timer -- --template react-ts`
+- Command: `pnpm create @vite-pwa/pwa@latest chess-timer --template react-ts`
 - Pros: PWA scaffolding included (manifest + SW), aligned with offline-first requirement.
 - Cons: still requires shadcn/ui + Tailwind setup.
 
@@ -93,7 +93,7 @@ Web application (React + TypeScript) with offline-first PWA requirements.
 **Initialization Command:**
 
 ```bash
-npm create @vite-pwa/pwa@latest chess-timer -- --template react-ts
+pnpm create @vite-pwa/pwa@latest chess-timer --template react-ts
 ```
 
 **Architectural Decisions Provided by Starter:**
@@ -109,15 +109,15 @@ npm create @vite-pwa/pwa@latest chess-timer -- --template react-ts
 
 **Version Freshness Checks (post-init):**
 - Confirm latest toolchain versions before first commit:
-  - `npm view @vite-pwa/pwa version`
-  - `npm view vite version`
-  - `npm view vite-plugin-pwa version`
-  - `npm view react version`
-  - `npm view typescript version`
-  - `npm view shadcn@latest version`
-  - `npm view tailwindcss version`
-  - `npm view @tailwindcss/vite version`
-- After scaffolding, run `npm outdated` and update any core tooling if needed.
+  - `pnpm view @vite-pwa/pwa version`
+  - `pnpm view vite version`
+  - `pnpm view vite-plugin-pwa version`
+  - `pnpm view react version`
+  - `pnpm view typescript version`
+  - `pnpm view shadcn@latest version`
+  - `pnpm view tailwindcss version`
+  - `pnpm view @tailwindcss/vite version`
+- After scaffolding, run `pnpm outdated` and update any core tooling if needed.
 
 **Note:** Project initialization using this command should be the first implementation story.
 
@@ -305,7 +305,7 @@ npm create @vite-pwa/pwa@latest chess-timer -- --template react-ts
 chess-timer/
 ├── README.md
 ├── package.json
-├── package-lock.json
+├── pnpm-lock.yaml
 ├── components.json                  # shadcn/ui config
 ├── vite.config.ts
 ├── tsconfig.json

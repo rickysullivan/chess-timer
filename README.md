@@ -5,20 +5,20 @@ Vite + React + TypeScript setup with PWA support, Tailwind, HeroUI, and Cloudfla
 ## Requirements
 
 - Node.js >= 20
-- npm >= 10
+- pnpm >= 10
 
 ## Local development
 
 ```bash
-npm install
-npm run dev
+pnpm install
+pnpm run dev
 ```
 
 ## Production build
 
 ```bash
-npm run build
-npm run preview
+pnpm run build
+pnpm run preview
 ```
 
 ## Testing
@@ -26,9 +26,9 @@ npm run preview
 Run the full local quality gate:
 
 ```bash
-npm run test:run
-npm run lint
-npm run build
+pnpm run test:run
+pnpm run lint
+pnpm run build
 ```
 
 Notes:
@@ -50,5 +50,5 @@ Production deployment is managed by the Cloudflare Pages project rather than Git
 For a local or manual deployment, run:
 
 ```bash
-npm run deploy:cloudflare
+pnpm run deploy:cloudflare
 ```

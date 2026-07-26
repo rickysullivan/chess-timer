@@ -74,7 +74,7 @@ NFR20: Mobile-first responsive layout with safe-area insets and controls reachab
 
 ### Additional Requirements
 
-- Starter template: Vite PWA React TS using `npm create @vite-pwa/pwa@latest chess-timer -- --template react-ts`.
+- Starter template: Vite PWA React TS using `pnpm create @vite-pwa/pwa@latest chess-timer --template react-ts`.
 - PWA caching strategy: network-first for HTML/app shell; cache-first for static assets; offline fallback to cached shell.
 - Client-only app (no backend API); state and settings persist locally only (localStorage).
 - Persistence keys use `chess_timer.*` prefix; restore in-progress game only if lastUpdated <= 30 minutes, otherwise start fresh with last-used control.
