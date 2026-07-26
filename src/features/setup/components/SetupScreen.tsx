@@ -8,7 +8,8 @@ const presetStyleCues: Record<string, string> = {
   '5+0': 'Quick game for casual play.',
   '10+0': 'A balanced game with room to think.',
   '15+10': 'Longer game with time to plan.',
-  '30+0': 'A full-length classical game.',
+  '30+0': 'A longer rapid game with room to think.',
+  '90+30': 'A tournament-style classical game.',
 }
 
 const describeTimeControl = (control: TimeControl) => {
